@@ -9,7 +9,10 @@ import { CLIENT_ID, SERVER_URL } from '../../secrets';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 
-
+function isValidString(string){
+    if(string) return true;
+    else return false;
+}
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -33,44 +36,32 @@ export default function UserModal(props){
     }
 
     const handleRedirectUrl = () =>{
-        console.log(props.modalVisible);
         if(!url) return;
         let urlObject = Linking.parse(url);
         if(!urlObject) return;
         if(!urlObject.queryParams){
             return;
         }
-        const {uid, uname} = urlObject.queryParams;
-        context.setUid(uid?uid:"");
-        context.setUname(uname?uname:"");
-        navigation.navigate("UserMaps", {uid:uid});
+        const user = urlObject.queryParams;
+        context.setUser(user);
+        navigation.navigate("UserMaps", {uid:user.uid});
     };
 
     React.useEffect(handleRedirectUrl, [url])
 
-    // handle redirect
-    React.useEffect(()=>{
-        // lnkSubscription&&Linking.removeEventListener(lnkSubscription);
-        // setLnkSubscription(Linking.addEventListener('url', (e)=>handleRedirectUrl(e.url)));
-        // Linking.getInitialURL().then(url => {
-        //   if (url) handleRedirectUrl(url);
-        // }).catch((e)=>console.error("Error opening initial url. "+e));
-    }, [])
-
     const onMapPressed = ()=>{
-        // props.setModalVisible(false);
-        // navigation.navigate("UserMaps", {uid:context.uid});
+        props.setModalVisible(false);
+        navigation.navigate("UserMaps", {uid:context.uid});
     }
 
-    const onOptionsPressed = ()=>{
-        console.log(`Current uid ${context.uid}`);
-        // props.setModalVisible(false);
-        // navigation.navigate("Options");
+    const onOptionsPressed = ()=>{        
+        props.setModalVisible(false);
+        navigation.navigate("Options");
     }
 
     const onLogoutPressed = ()=>{
         props.setModalVisible(false);
-        console.log(`Current uid ${context.uid}`)
+        console.log(`Current uid ${context.user.uid}`)
         console.log("Handle Logout here");
     }
     return(
@@ -83,13 +74,13 @@ export default function UserModal(props){
             }}
         >
             <View style={styles.modal}>
-                {context.uid == false&&<View style={styles.modalElement}>
+                {!isValidString(context.user.uid)&&<View style={styles.modalElement}>
                     <Button title='Login'
                         onPress={onLoginPressed}/>
                 </View>}
                 
 
-                {context.uid == true &&<View style={styles.modalElement}>
+                {isValidString(context.user.uid) &&<View style={styles.modalElement}>
                     <Button title='Maps'
                         onPress={onMapPressed}/>
                 </View>}
@@ -99,7 +90,7 @@ export default function UserModal(props){
                         onPress={onOptionsPressed}/>
                 </View>
 
-                {context.uid == true && <View style={styles.modalElement}>
+                {isValidString(context.user.uid) && <View style={styles.modalElement}>
                     <Button title='Logout'
                         onPress={onLogoutPressed}/>
                 </View>}

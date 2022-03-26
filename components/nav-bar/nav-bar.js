@@ -16,7 +16,7 @@ export default function NavBar(){
             <UserModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
             <TouchableOpacity 
                 onPress={()=>setModalVisible(true)}>
-                <Text>{context.uname?context.uname:"Guest"}</Text>
+                <Text>{context.user.uname?context.user.uname:"Guest"}</Text>
             </TouchableOpacity>
         </View>
     );

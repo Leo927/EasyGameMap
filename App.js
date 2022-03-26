@@ -11,11 +11,10 @@ import MapConfig from './components/map-config/map-config';
 const Stack = createNativeStackNavigator();
 
 const App = () => {  
-  const [uname, setUname] = React.useState("Dummy user");
-  const [uid, setUid] = React.useState("");
+  const [user, setUser] = React.useState({id:'', name:'', token:''});
   return (
     <EGMContext.Provider
-      value={{uname, setUname, uid, setUid}}>
+      value={{user, setUser}}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName='MapConfig'>
           
@@ -62,56 +61,3 @@ const HomeScreen = ({ navigation }) => {
 };
 
 export default App;
-
-// import * as React from 'react';
-// import * as WebBrowser from 'expo-web-browser';
-// import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-// import { Button, Text, StyleSheet, View } from 'react-native';
-
-// import {CLIENT_ID} from './secrets';
-
-// WebBrowser.maybeCompleteAuthSession();
-
-// // Endpoint
-// const discovery = {
-//   authorizationEndpoint: 'https://github.com/login/oauth/authorize',
-//   tokenEndpoint: 'https://github.com/login/oauth/access_token',
-//   revocationEndpoint: `https://github.com/settings/connections/applications/${CLIENT_ID}`,
-// };
-
-// export default function App() {
-//   const [request, response, promptAsync] = useAuthRequest(
-//     {
-//       clientId: CLIENT_ID,
-//       scopes: ['identity'],
-//       redirectUri: makeRedirectUri({ useProxy: true })
-//     },
-//     discovery
-//   );
-
-//   React.useEffect(() => {
-//     if (response?.type === 'success') {
-//       const { code } = response.params;
-//       console.log(code);
-//       }
-//   }, [response]);
-
-//   return (
-//     <View style={styles.container}>
-//       <Text>Test</Text>
-//       <Button
-//       disabled={!request}
-//       title="Login"
-//       onPress={() => {
-//         promptAsync();
-//         }}
-//       />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container:{
-//     flex:1,
-//   },
-// })
