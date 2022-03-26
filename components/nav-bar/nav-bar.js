@@ -16,7 +16,7 @@ export default function NavBar(){
             <UserModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
             <TouchableOpacity 
                 onPress={()=>setModalVisible(true)}>
-                <Text>{context.user.uname?context.user.uname:"Guest"}</Text>
+                <Text>{context.user?.uname?context.user.uname:"Guest"}</Text>
             </TouchableOpacity>
         </View>
     );
@@ -34,6 +34,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         minWidth: 60,
         minHeight: 30,
-
     },
 });

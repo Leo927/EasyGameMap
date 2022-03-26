@@ -11,7 +11,7 @@ import MapConfig from './components/map-config/map-config';
 const Stack = createNativeStackNavigator();
 
 const App = () => {  
-  const [user, setUser] = React.useState({id:'', name:'', token:''});
+  const [user, setUser] = React.useState(null);
   return (
     <EGMContext.Provider
       value={{user, setUser}}>
@@ -40,7 +40,6 @@ const App = () => {
             options={{
               headerRight: ()=>(<NavBar/>)
             }}
-            initialParams = {{mapId:"TestMapId"}}
           />
 
 

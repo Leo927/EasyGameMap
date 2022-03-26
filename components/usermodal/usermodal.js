@@ -44,7 +44,6 @@ export default function UserModal(props){
         }
         const user = urlObject.queryParams;
         context.setUser(user);
-        navigation.navigate("UserMaps", {uid:user.uid});
     };
 
     React.useEffect(handleRedirectUrl, [url])
@@ -61,8 +60,9 @@ export default function UserModal(props){
 
     const onLogoutPressed = ()=>{
         props.setModalVisible(false);
-        console.log(`Current uid ${context.user.uid}`)
-        console.log("Handle Logout here");
+        console.log(`Current uid ${context.user}`)
+        console.log("User logged out.");
+        context.user = null;
     }
     return(
         <Modal
@@ -74,13 +74,13 @@ export default function UserModal(props){
             }}
         >
             <View style={styles.modal}>
-                {!isValidString(context.user.uid)&&<View style={styles.modalElement}>
+                {context.user.uid==undefined&&<View style={styles.modalElement}>
                     <Button title='Login'
                         onPress={onLoginPressed}/>
                 </View>}
                 
 
-                {isValidString(context.user.uid) &&<View style={styles.modalElement}>
+                {context.user.uid !=undefined &&<View style={styles.modalElement}>
                     <Button title='Maps'
                         onPress={onMapPressed}/>
                 </View>}
@@ -90,7 +90,7 @@ export default function UserModal(props){
                         onPress={onOptionsPressed}/>
                 </View>
 
-                {isValidString(context.user.uid) && <View style={styles.modalElement}>
+                {context.user.uid !=undefined && <View style={styles.modalElement}>
                     <Button title='Logout'
                         onPress={onLogoutPressed}/>
                 </View>}
