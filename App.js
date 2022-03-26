@@ -38,6 +38,7 @@ const App = () => {
             name="MapConfig"
             component={MapConfig}
             options={{
+              title: "Map Config",
               headerRight: ()=>(<NavBar/>)
             }}
           />

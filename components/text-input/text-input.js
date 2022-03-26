@@ -18,7 +18,7 @@ const TextEntry = (props)=>{
     const [started, setStarted] = React.useState(false);
 
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, props.style]}>
             <View style={[styles.row]}>
                 <Text style={styles.description}>{props.description}</Text>
             </View>
@@ -54,8 +54,6 @@ TextEntry.defaultProps = {
 const styles = StyleSheet.create({
     container: {
         height :50,
-        marginLeft: '10%',
-        marginRight: '10%',
     },
     row:{
         flexDirection: 'row',
@@ -64,11 +62,10 @@ const styles = StyleSheet.create({
     },
     label:{
         flex:1,
-        textAlign:'right',
         marginRight: 5,
     },
     input:{
-        flex:2,
+        flex:4,
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 2,

@@ -74,13 +74,13 @@ export default function UserModal(props){
             }}
         >
             <View style={styles.modal}>
-                {context.user.uid==undefined&&<View style={styles.modalElement}>
+                {context?.user?.uid==undefined&&<View style={styles.modalElement}>
                     <Button title='Login'
                         onPress={onLoginPressed}/>
                 </View>}
                 
 
-                {context.user.uid !=undefined &&<View style={styles.modalElement}>
+                {context?.user?.uid !=undefined &&<View style={styles.modalElement}>
                     <Button title='Maps'
                         onPress={onMapPressed}/>
                 </View>}
@@ -90,7 +90,7 @@ export default function UserModal(props){
                         onPress={onOptionsPressed}/>
                 </View>
 
-                {context.user.uid !=undefined && <View style={styles.modalElement}>
+                {context?.user?.uid !=undefined && <View style={styles.modalElement}>
                     <Button title='Logout'
                         onPress={onLogoutPressed}/>
                 </View>}
