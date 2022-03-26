@@ -1,56 +1,71 @@
+/**Display a user context menu. Most importantly login. 
+ * Authentication process from https://github.com/jhannes/react-native-oauth-demo
+ */
 import React from 'react';
-import { View, Pressable, StyleSheet, Text, Button, TouchableOpacity, Modal } from 'react-native';
+import { View, StyleSheet, Button, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import EGMContext from '../../context';
-import { CLIENT_ID } from '../../secrets';
+import { CLIENT_ID, SERVER_URL } from '../../secrets';
 import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
+import * as Linking from 'expo-linking';
+
 
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function UserModal(props){
-    // Configure Github Endpoint
-    const discovery = {
-        authorizationEndpoint: 'https://github.com/login/oauth/authorize',
-        tokenEndpoint: 'https://github.com/login/oauth/access_token',
-        revocationEndpoint: `https://github.com/settings/connections/applications/${CLIENT_ID}`,
-    };
-    // Create request
-    const [request, response, promptAsync] = useAuthRequest(
-        {
-        clientId: CLIENT_ID,
-        scopes: ['identity'],
-        redirectUri: makeRedirectUri({ useProxy: true }),
-        },
-        discovery
-    );
-    
-    // watch response and handle login response.
-    React.useEffect(() => {
-        if (response?.type === 'success') {
-        const { code } = response.params;
-        console.log(code);
-        }
-    }, [response]);
-
     const context = React.useContext(EGMContext);
+
     const navigation = useNavigation();
 
+    const url = Linking.useURL();
+
+    // used for storing the subscription to Linking url change
+    const [lnkSubscription, setLnkSubscription] = React.useState();
+
     const onLoginPressed = ()=>{
-        // props.setModalVisible(false);
-        // navigation.navigate("Login");
-        promptAsync({useProxy:true});
+        const url = new URL('https://github.com/login/oauth/authorize');
+        url.searchParams.append('client_id', CLIENT_ID);
+        url.searchParams.append('redirect_uri', SERVER_URL+'/oauth2/github/callback');
+        
+        Linking.openURL(url.toString());
+        props.setModalVisible(false);
     }
 
+    const handleRedirectUrl = () =>{
+        console.log(props.modalVisible);
+        if(!url) return;
+        let urlObject = Linking.parse(url);
+        if(!urlObject) return;
+        if(!urlObject.queryParams){
+            return;
+        }
+        const {uid, uname} = urlObject.queryParams;
+        context.setUid(uid?uid:"");
+        context.setUname(uname?uname:"");
+        navigation.navigate("UserMaps", {uid:uid});
+    };
+
+    React.useEffect(handleRedirectUrl, [url])
+
+    // handle redirect
+    React.useEffect(()=>{
+        // lnkSubscription&&Linking.removeEventListener(lnkSubscription);
+        // setLnkSubscription(Linking.addEventListener('url', (e)=>handleRedirectUrl(e.url)));
+        // Linking.getInitialURL().then(url => {
+        //   if (url) handleRedirectUrl(url);
+        // }).catch((e)=>console.error("Error opening initial url. "+e));
+    }, [])
+
     const onMapPressed = ()=>{
-        props.setModalVisible(false);
-        navigation.navigate("UserMaps", {uid:context.uid});
+        // props.setModalVisible(false);
+        // navigation.navigate("UserMaps", {uid:context.uid});
     }
 
     const onOptionsPressed = ()=>{
-        props.setModalVisible(false);
-        navigation.navigate("Options");
+        console.log(`Current uid ${context.uid}`);
+        // props.setModalVisible(false);
+        // navigation.navigate("Options");
     }
 
     const onLogoutPressed = ()=>{
@@ -64,30 +79,30 @@ export default function UserModal(props){
             animationType="slide"
             visible={props.modalVisible}
             onRequestClose={() => {
-            props.setModalVisible(!modalVisible);
+            props.setModalVisible(false);
             }}
         >
             <View style={styles.modal}>
-                <View style={styles.modalElement}>
+                {context.uid == false&&<View style={styles.modalElement}>
                     <Button title='Login'
-                        disabled={!request}
                         onPress={onLoginPressed}/>
-                </View>
+                </View>}
+                
 
-                <View style={styles.modalElement}>
+                {context.uid == true &&<View style={styles.modalElement}>
                     <Button title='Maps'
                         onPress={onMapPressed}/>
-                </View>
+                </View>}
 
                 <View style={styles.modalElement}>
                     <Button title='Options'
                         onPress={onOptionsPressed}/>
                 </View>
 
-                <View style={styles.modalElement}>
+                {context.uid == true && <View style={styles.modalElement}>
                     <Button title='Logout'
                         onPress={onLogoutPressed}/>
-                </View>
+                </View>}
                 
                 <View style={styles.modalElement}>
                     <Button title='Cancel' 
