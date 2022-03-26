@@ -2,14 +2,45 @@ import React from 'react';
 import { View, Pressable, StyleSheet, Text, Button, TouchableOpacity, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import EGMContext from '../../context';
+import { CLIENT_ID } from '../../secrets';
+import * as WebBrowser from 'expo-web-browser';
+import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
+
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function UserModal(props){
+    // Configure Github Endpoint
+    const discovery = {
+        authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+        tokenEndpoint: 'https://github.com/login/oauth/access_token',
+        revocationEndpoint: `https://github.com/settings/connections/applications/${CLIENT_ID}`,
+    };
+    // Create request
+    const [request, response, promptAsync] = useAuthRequest(
+        {
+        clientId: CLIENT_ID,
+        scopes: ['identity'],
+        redirectUri: makeRedirectUri({ useProxy: true }),
+        },
+        discovery
+    );
+    
+    // watch response and handle login response.
+    React.useEffect(() => {
+        if (response?.type === 'success') {
+        const { code } = response.params;
+        console.log(code);
+        }
+    }, [response]);
+
     const context = React.useContext(EGMContext);
     const navigation = useNavigation();
 
     const onLoginPressed = ()=>{
-        props.setModalVisible(false);
-        navigation.navigate("Login");
+        // props.setModalVisible(false);
+        // navigation.navigate("Login");
+        promptAsync({useProxy:true});
     }
 
     const onMapPressed = ()=>{
@@ -27,7 +58,6 @@ export default function UserModal(props){
         console.log(`Current uid ${context.uid}`)
         console.log("Handle Logout here");
     }
-
     return(
         <Modal
             transparent={false}
@@ -38,25 +68,26 @@ export default function UserModal(props){
             }}
         >
             <View style={styles.modal}>
-                {!context.uid && <View style={styles.modalElement}>
+                <View style={styles.modalElement}>
                     <Button title='Login'
+                        disabled={!request}
                         onPress={onLoginPressed}/>
-                </View>}
+                </View>
 
-                {context.uid && <View style={styles.modalElement}>
+                <View style={styles.modalElement}>
                     <Button title='Maps'
                         onPress={onMapPressed}/>
-                </View>}
+                </View>
 
                 <View style={styles.modalElement}>
                     <Button title='Options'
                         onPress={onOptionsPressed}/>
                 </View>
 
-                {context.uid && <View style={styles.modalElement}>
+                <View style={styles.modalElement}>
                     <Button title='Logout'
                         onPress={onLogoutPressed}/>
-                </View>}
+                </View>
                 
                 <View style={styles.modalElement}>
                     <Button title='Cancel' 

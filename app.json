@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "EasyGameMap",
+    "scheme": "egm",
     "slug": "EasyGameMap",
     "version": "1.0.0",
     "orientation": "portrait",
