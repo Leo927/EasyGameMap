@@ -21,8 +21,8 @@ const App = () => {
   return (
     <EGMContext.Provider
       value={{user, setUser}}>
-      <NavigationContainer>
-        <Provider>
+      <Provider>
+        <NavigationContainer>
           <Stack.Navigator initialRouteName='HomeStack'>
             
             <Stack.Screen
@@ -42,16 +42,21 @@ const App = () => {
             />
 
         </Stack.Navigator>
+        </NavigationContainer>
       </Provider>
-      </NavigationContainer>
     </EGMContext.Provider>
   );
 };
 
 function HomeStack(){
     return(
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen}
+      <Tab.Navigator
+        barStyle = {{
+          backgroundColor:"white"
+        }}
+        >
+        <Tab.Screen 
+          name="Home" component={HomeScreen}
           options={{
             tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="home" color={color} size={26} />
