@@ -11,9 +11,6 @@ import EGMContext from '../../context';
 
 
 const TextEntry = (props)=>{
-    // text value of the text input
-    const [value, setValue] = React.useState("")
-
     // whether the user has ever changed the input text. true if input text was changed else false. 
     const [started, setStarted] = React.useState(false);
 
@@ -26,17 +23,16 @@ const TextEntry = (props)=>{
                 <Text style={styles.label}>{props.label}</Text>
                 <TextInput
                     style={styles.input}
-                    value={value}
+                    value={props.value}
                     placeholder={props.placeholder}
-                    onChangeText = {(newValue)=>{
-                        setValue(newValue);         
+                    onChangeText = {(newValue)=>{ 
                         setStarted(true);
                         props.onValueChange(newValue);
                     }}
                 />
             </View>
             <View style={styles.row}>
-                {(started && !props.isValidInput(value) )&&<Text style={styles.errorText}>{props.errorText}</Text>}
+                {(started && !props.isValidInput(props.value) )&&<Text style={styles.errorText}>{props.errorText}</Text>}
             </View>
         </View>
     );
