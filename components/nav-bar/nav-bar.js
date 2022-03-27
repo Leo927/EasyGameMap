@@ -3,6 +3,7 @@ import { View, Pressable, StyleSheet, Text, Button, TouchableOpacity, Modal } fr
 import { useNavigation } from '@react-navigation/native';
 import EGMContext from '../../context';
 import UserModal from '../usermodal/usermodal';
+import { Avatar, Portal, Provider } from 'react-native-paper';
 
 export default function NavBar(){
     const context = React.useContext(EGMContext);
@@ -13,10 +14,12 @@ export default function NavBar(){
     
     return(
         <View style={styles.navbar}>    
-            <UserModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+            <Portal>
+                <UserModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
+            </Portal>
             <TouchableOpacity 
                 onPress={()=>setModalVisible(true)}>
-                <Text>{context.user?.uname?context.user.uname:"Guest"}</Text>
+                <Avatar.Text size={35} label={context.user?.uname?context.user.uname[0]:""}/>
             </TouchableOpacity>
         </View>
     );

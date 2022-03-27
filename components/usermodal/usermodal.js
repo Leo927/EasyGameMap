@@ -2,7 +2,9 @@
  * Authentication process from https://github.com/jhannes/react-native-oauth-demo
  */
 import React from 'react';
-import { View, StyleSheet, Button, Modal } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Modal, Button } from 'react-native-paper';
+
 import { useNavigation } from '@react-navigation/native';
 import EGMContext from '../../context';
 import { CLIENT_ID, SERVER_URL } from '../../secrets';
@@ -73,40 +75,22 @@ export default function UserModal(props){
     }
     return(
         <Modal
-            transparent={false}
-            animationType="slide"
+            contentContainerStyle = {styles.modal}
             visible={props.modalVisible}
-            onRequestClose={() => {
-            props.setModalVisible(false);
-            }}
+            onDismiss={props.setModalVisible}
         >
-            <View style={styles.modal}>
-                {context?.user?.uid==undefined&&<View style={styles.modalElement}>
-                    <Button title='Login'
-                        onPress={onLoginPressed}/>
-                </View>}
-                
+            {context?.user?.uid==undefined&&
+                <Button mode="outlined" onPress={onLoginPressed}>Login</Button>
+            }
+            
 
-                {context?.user?.uid !=undefined &&<View style={styles.modalElement}>
-                    <Button title='Maps'
-                        onPress={onMapPressed}/>
-                </View>}
+            {context?.user?.uid !=undefined &&
+                <Button mode="outlined" onPress={onMapPressed}>Maps</Button>}
 
-                <View style={styles.modalElement}>
-                    <Button title='Options'
-                        onPress={onOptionsPressed}/>
-                </View>
+                <Button mode="outlined" onPress={onOptionsPressed}>Options</Button>
 
-                {context?.user?.uid !=undefined && <View style={styles.modalElement}>
-                    <Button title='Logout'
-                        onPress={onLogoutPressed}/>
-                </View>}
-                
-                <View style={styles.modalElement}>
-                    <Button title='Cancel' 
-                        onPress={()=>props.setModalVisible(false)}/>
-                </View>
-            </View>
+            {context?.user?.uid !=undefined && 
+                <Button mode="outlined" onPress={onLogoutPressed}>Log Out</Button>}
         </Modal>
     );
 }
@@ -118,7 +102,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     modal:{
-        flex: 1,
-        justifyContent: 'center',
+        backgroundColor: 'white',
+        padding: 20,
     },
 });
