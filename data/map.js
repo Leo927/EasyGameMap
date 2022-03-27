@@ -42,3 +42,31 @@ export async function updateMap(mapId, mapData, user){
         console.error("Failed to update map. "+e);
     }
 }
+
+/**
+ * Get all maps owned by a user.
+ * 
+ * Params:
+ * <1> uid: the unique id of the user.
+ * 
+ * Returns: 
+ *  A list of all the maps owned by the user. 
+ * 
+ * Exceptions:
+ * <1> user id not found. 
+ * <2> uid not valid. 
+ * <3> server not responding. 
+ */
+export async function getUserMaps(uid){
+    try{
+        const response = await fetch(endPoint + `/owner/${uid}`,{
+            method:"GET",
+        });
+        const responseJson = await response.json();
+        return responseJson;
+    }
+    catch(e){
+        console.error(`Failed to get maps by user id ${uid}`);
+        return [];
+    }
+}

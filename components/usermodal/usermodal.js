@@ -60,7 +60,6 @@ export default function UserModal(props){
     const onMapPressed = ()=>{
         props.setModalVisible(false);
         navigation.navigate("UserMaps", {uid:context.user.uid});
-        console.log({user:context.user});
     }
 
     const onOptionsPressed = ()=>{        
@@ -70,8 +69,6 @@ export default function UserModal(props){
 
     const onLogoutPressed = ()=>{
         props.setModalVisible(false);
-        console.log(`Current uid ${context.user}`)
-        console.log("User logged out.");
         context.user = null;
     }
     return(

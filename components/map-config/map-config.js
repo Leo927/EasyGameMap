@@ -33,7 +33,6 @@ export default function MapConfig(){
             setMapId(route.params.mapId);
         else
             setMapId(undefined);
-        console.log(mapId);
     },[route.params])
 
     //get the data representing the current map
