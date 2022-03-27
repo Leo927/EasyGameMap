@@ -25,7 +25,7 @@ export default function UserMaps(){
             return;
         const result = await getUserMaps(route.params.uid);
         setMaps(result);
-    }, [route.params.uid, route.params]);
+    }, [route.params]);
 
     const renderMap = ({item, index})=>(
         <Card style={styles.mapCard}>

@@ -1,12 +1,12 @@
 class Map{
     constructor(){
+        this._id = "";
         this.name = "";
-        this.id = "";
-        this.img = "";
+        this.image = "";
         this.width = 0;
         this.height = 0;
-        this.markerGroups = {};
-        this.icons = {};
+        this.markerGroups = Set();
+        this.customIcons = {};
         this.markers = {};
     }
 }

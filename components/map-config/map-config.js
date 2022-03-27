@@ -5,14 +5,19 @@ import EGMContext from '../../context';
 import { useURL } from 'expo-linking';
 
 
+
 import { updateMap, createMap } from '../../data/map';
 import TextEntry from '../text-input/text-input';
 import PullToRefreshViewNativeComponent from 'react-native/Libraries/Components/RefreshControl/PullToRefreshViewNativeComponent';
+import { Map } from '../../classes/map';
+import { getMap } from '../../data/map';
 
 export default function MapConfig(){
     const route = useRoute();
 
     const context = React.useContext(EGMContext);
+
+    const [map, setMap] = React.useState(new Map());
     
     // map info states
     const [mapId, setMapId] = React.useState(undefined);
@@ -30,9 +35,9 @@ export default function MapConfig(){
     // on start, set map id from route params
     React.useEffect(()=>{
         if(route?.params?.mapId)
-            setMapId(route.params.mapId);
+            setMap(await getMap(route.params.mapId));
         else
-            setMapId(undefined);
+            setMap(new Map());
     },[route.params])
 
     //get the data representing the current map

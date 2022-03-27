@@ -76,6 +76,9 @@ export async function getMap(mapId){
     try{
         const response = await fetch(endPoint + `/${mapId}`);
         const responseJson = await response.json();
+        if(!response){
+            return new Map();
+        }
         return responseJson;
     }
     catch(e){
