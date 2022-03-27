@@ -74,7 +74,7 @@ export default function UserMaps(){
                 </Dialog>
             </Portal>
             {/* Only render create new map button when loggined and user id match map list id */}
-            {context.user.uid && 
+            {context.user?.uid && 
                 (context.user.uid== route?.params?.uid) &&
                 <Button mode="outlined" onPress={onCreateMapPressed}>Create New Map</Button>}
             <View>
