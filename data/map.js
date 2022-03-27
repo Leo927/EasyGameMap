@@ -72,17 +72,17 @@ export async function getUserMaps(uid){
     }
 }
 
+// Returns a map by id. if nothing was found, returns null.
 export async function getMap(mapId){
     try{
         const response = await fetch(endPoint + `/${mapId}`);
         const responseJson = await response.json();
-        if(!response){
-            return new Map();
-        }
-        return responseJson;
+        if(responseJson.length <= 0)
+            return null;
+        return responseJson[0];
     }
     catch(e){
         console.error(`Failed to fetch map. Id ${mapId}`);
-        return new Map();
+        return null;
     }
 }
