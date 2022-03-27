@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet, Text, Button, TouchableOpacity } from 'reac
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EGMContext from '../../context';
 import { getUserMaps } from '../../data/map';
+import { Card } from 'react-native-paper';
 
 export default function UserMaps(){
     const route = useRoute();
@@ -23,19 +24,21 @@ export default function UserMaps(){
         if(!route?.params?.uid)
             return;
         const result = await getUserMaps(route.params.uid);
-        console.log(result);
         setMaps(result);
     }, [route.params.uid, route.params]);
 
     const renderMap = ({item, index})=>(
-        <View>
-            <Text>{item.name}</Text>
-            <Text>{index}</Text>
-        </View>
+        <Card style={styles.mapCard}>
+            <TouchableOpacity
+                onPress={()=>navigation.navigate("MapConfig", {mapId: item._id})}
+                >
+                <Text style={styles.mapTitle}>{item.name}</Text>
+            </TouchableOpacity>
+        </Card>
     );
 
     return(
-        <View>
+        <View style={styles.container}>
             {/* Only render create new map button when loggined and user id match map list id */}
             {context.user.uid && 
                 (context.user.uid== route?.params?.uid) &&
@@ -44,10 +47,24 @@ export default function UserMaps(){
                 <Text>Maps</Text>
                 <FlatList
                     data={maps}
-                    keyExtractor ={item=>item._id}
+                    keyExtractor ={item=>item._id.toString()}
                     renderItem = {renderMap}
                 />
             </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container:{
+        marginLeft:'10%',
+        marginRight: '10%',
+    },
+    mapCard:{
+        marginTop: 10,
+    },
+    mapTitle:{
+        fontSize: 18,
+        margin: 5
+    }
+});
