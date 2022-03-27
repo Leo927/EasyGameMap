@@ -3,6 +3,7 @@ import { View, Switch, StyleSheet, Text, Button, TouchableOpacity, Picker, FlatL
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EGMContext from '../../context';
 import { useURL } from 'expo-linking';
+import { Card, TextInput } from 'react-native-paper';
 
 
 
@@ -33,27 +34,18 @@ export default function MapConfig(){
     const [customMapSize, setCustomMapSize] = React.useState(false);
 
     // on start, set map id from route params
-    React.useEffect(()=>{
-        if(route?.params?.mapId)
-            setMap(await getMap(route.params.mapId));
-        else
+    React.useEffect(async ()=>{
+        
+        if(!route?.params?.mapId)
+            return;
+        var tempMap = await getMap(route.params.mapId);
+        if(!tempMap) {
             setMap(new Map());
+            return;
+        }
+        setMap(tempMap);
+        console.log('map updated by params', {map});
     },[route.params])
-
-    //get the data representing the current map
-    const getMapData = ()=>{
-        const map = {};
-        map.name = mapName;
-        if(customMapSize){
-            map.width = mapWidth;
-            map.height = mapHeight;
-        }
-        else{
-            // infer map size here
-        }
-        map.markerGroups = markerGroups;
-        return map;
-    }
 
     const onCreatePressed = async ()=>{
         if(mapId)
@@ -77,16 +69,13 @@ export default function MapConfig(){
             {/*Only load when user is logged in */}
             {context?.user?.uid != undefined &&
                 <View>
-                    
-                    <TextEntry 
-                        style= {styles.row}
-                        label ="Name"
-                        description="Displayed map name"
+                    <TextInput
+                        label="Name"
+                        value={map.name}
                         placeholder = "Enter name"
-                        onValueChange = {setMapName}
-                        isValidInput={(value)=>value}
-                        errorText="Map name cannot be empty"/>
-                    
+                        error = {(value)=>{value.name}}
+                        onChangeText = {(value)=>setMap((current)=>({...current, name:value}))}
+                    />
 
                     <View style={styles.entry}>
                         <Text>Define Custom Map Size</Text>
@@ -95,27 +84,30 @@ export default function MapConfig(){
                             onValueChange={setCustomMapSize}
                         ></Switch>
                     </View>
+                    
+                    <Card>
+                        <Button 
+                            title='Infer Map Size'
+                        />
 
-                    {customMapSize&&<TextEntry 
-                        style={styles.row}
-                        label ="Width"
-                        description="horizontal dimension"
-                        placeholder = "Enter width"
-                        onValueChange = {setMapWidth}
-                        isValidInput={(value)=>!isNaN(value) && value > 0}
-                        errorText="Map width must be a number."/>
-                    }
+                        <TextEntry 
+                            style={styles.row}
+                            label ="Width"
+                            description="horizontal dimension"
+                            placeholder = "Enter width"
+                            onValueChange = {setMapWidth}
+                            isValidInput={(value)=>!isNaN(value) && value > 0}
+                            errorText="Map width must be a number."/>
 
-                    {customMapSize&&<TextEntry 
-                        style={styles.row}
-                        label ="Height"
-                        description="Vertical dimension"
-                        placeholder = "Enter height"
-                        onValueChange = {setMapHeight}
-                        isValidInput={(value)=>!isNaN(value) && value > 0}
-                        errorText="Map width must be a number."/>
-                    }
-
+                        <TextEntry 
+                            style={styles.row}
+                            label ="Height"
+                            description="Vertical dimension"
+                            placeholder = "Enter height"
+                            onValueChange = {setMapHeight}
+                            isValidInput={(value)=>!isNaN(value) && value > 0}
+                            errorText="Map width must be a number."/>
+                    </Card>
                     <View style={styles.row}>
                         <Text>Icon Groups</Text>
                     </View>
@@ -123,11 +115,11 @@ export default function MapConfig(){
 
                     <Button
                         style = {styles.row}
-                        title={mapId?"Update":"Create"}
+                        title={map._id != ""?"Update":"Create"}
                         onPress={onCreatePressed}
                     />
 
-                    {mapId != undefined && 
+                    {map._id != "" && 
                         <Button 
                             title='View Map'
                             style = {styles.row}
@@ -147,6 +139,7 @@ const styles = StyleSheet.create({
     container:{
         marginLeft: "10%",
         marginRight: "10%",
+        marginTop: 20,
     },
     entry: {
         flexDirection: 'row',
