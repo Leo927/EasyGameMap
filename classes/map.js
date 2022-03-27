@@ -5,7 +5,7 @@ class Map{
         this.image = "";
         this.width = 0;
         this.height = 0;
-        this.markerGroups = Set();
+        this.markerGroups = new Set();
         this.customIcons = {};
         this.markers = {};
     }
