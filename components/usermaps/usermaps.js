@@ -2,12 +2,10 @@ import * as React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EGMContext from '../../context';
-import { getUserMaps, deleteMap } from '../../data/map';
+import { getUserMaps, deleteMap, updateMap } from '../../data/map';
 import { Card, Button, Text, Title, Portal, Dialog, Provider, Paragraph } from 'react-native-paper';
 
-export default function UserMaps(){
-    const route = useRoute();
-
+export default function UserMaps({uid}){
     const navigation = useNavigation();
 
     const [delVisible, setDelVisible] = React.useState(false);
@@ -25,13 +23,24 @@ export default function UserMaps(){
         navigation.navigate("MapConfig");
     }
 
-    // set maps on uid change
-    React.useEffect(async ()=>{
-        if(!route?.params?.uid)
+    // update maps when loading
+    const updateMaps = async ()=>{
+        if(!uid)
             return;
-        const result = await getUserMaps(route.params.uid);
-        setMaps(result);
-    }, [route.params]);
+        try{
+            setMaps(await getUserMaps(uid));
+        }catch(e){
+            console.error(e);
+        }
+    };
+
+
+
+    React.useEffect(()=>{
+        const unsubscribe = navigation.addListener('focus', updateMaps);
+        // Return the function to unsubscribe from the event so it gets removed on unmount
+        return unsubscribe;
+    }, [navigation])
 
     const renderMap = ({item, index})=>{
         return(
@@ -75,7 +84,7 @@ export default function UserMaps(){
             </Portal>
             {/* Only render create new map button when loggined and user id match map list id */}
             {context.user?.uid && 
-                (context.user.uid== route?.params?.uid) &&
+                (context.user.uid== uid) &&
                 <Button mode="outlined" onPress={onCreateMapPressed}>Create New Map</Button>}
             <View>
                 <FlatList

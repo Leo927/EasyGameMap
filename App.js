@@ -9,7 +9,7 @@ import { Provider } from 'react-native-paper';
 import EGMContext from './context';
 import NavBar from './components/nav-bar/nav-bar';
 import HomeScreen from './components/home-screen/home-screen';
-import UserMaps from './components/usermaps/usermaps';
+import ProfileScreen from './components/profile-screen/profile-screen';
 import MapConfig from './components/map-config/map-config';
 
 const Stack = createNativeStackNavigator();
@@ -65,7 +65,7 @@ function HomeStack(){
         <Tab.Screen 
           name="Profile" 
           title="Profiles"
-          component={UserMaps}
+          component={ProfileScreen}
           options={{
             tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="map" color={color} size={26} />)
