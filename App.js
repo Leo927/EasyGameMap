@@ -16,7 +16,7 @@ const App = () => {
     <EGMContext.Provider
       value={{user, setUser}}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='MapConfig'>
+        <Stack.Navigator initialRouteName='Home'>
           
           <Stack.Screen
             name="Home"
