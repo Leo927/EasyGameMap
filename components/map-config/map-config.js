@@ -33,8 +33,6 @@ export default function MapConfig(){
         quality: 1,
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
         setImage(result.uri);
         }
@@ -51,7 +49,6 @@ export default function MapConfig(){
             return;
         }
         setMap(tempMap);
-        console.log('map updated by params', {map});
     },[route.params])
 
     const onCreatePressed = async ()=>{
