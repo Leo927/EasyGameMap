@@ -6,6 +6,7 @@ import { Provider } from 'react-native-paper';
 
 import EGMContext from './context';
 import NavBar from './components/nav-bar/nav-bar';
+import HomeScreen from './components/home/home';
 import UserMaps from './components/usermaps/usermaps';
 import MapConfig from './components/map-config/map-config';
 
@@ -53,14 +54,6 @@ const App = () => {
   );
 };
 
-const HomeScreen = ({ navigation }) => {
-  return (
-      <View>
-        <Text>
-          Test
-        </Text>
-      </View>
-  );
-};
+
 
 export default App;
