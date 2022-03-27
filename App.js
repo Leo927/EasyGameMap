@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Button, View, Text, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider } from 'react-native-paper';
 
 import EGMContext from './context';
 import NavBar from './components/nav-bar/nav-bar';
@@ -16,6 +17,7 @@ const App = () => {
     <EGMContext.Provider
       value={{user, setUser}}>
       <NavigationContainer>
+        <Provider>
         <Stack.Navigator initialRouteName='Home'>
           
           <Stack.Screen
@@ -45,6 +47,7 @@ const App = () => {
 
 
         </Stack.Navigator>
+      </Provider>
       </NavigationContainer>
     </EGMContext.Provider>
   );
