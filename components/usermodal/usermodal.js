@@ -23,9 +23,6 @@ export default function UserModal(props){
 
     const url = Linking.useURL();
 
-    // used for storing the subscription to Linking url change
-    const [lnkSubscription, setLnkSubscription] = React.useState();
-
     const onLoginPressed = ()=>{
         const url = new URL('https://github.com/login/oauth/authorize');
         url.searchParams.append('client_id', CLIENT_ID);
@@ -36,21 +33,34 @@ export default function UserModal(props){
     }
 
     const handleRedirectUrl = () =>{
-        if(!url) return;
-        let urlObject = Linking.parse(url);
-        if(!urlObject) return;
-        if(!urlObject.queryParams){
-            return;
+        try{
+            if(!url) return;
+            let urlObject = Linking.parse(url);
+            if(!urlObject) return;
+            if(!urlObject?.queryParams?.uid){
+                return;
+            }
+            const user = {
+                token: urlObject.queryParams.token,
+                uid: urlObject.queryParams.uid,
+                uname: urlObject.queryParams.uname,
+            }
+            if(user.uid){
+                console.log(`changing user to ${user}`);
+                context.setUser(user);
+            }
         }
-        const user = urlObject.queryParams;
-        context.setUser(user);
+        catch(e){
+            console.error(e);
+        }
     };
 
     React.useEffect(handleRedirectUrl, [url])
 
     const onMapPressed = ()=>{
         props.setModalVisible(false);
-        navigation.navigate("UserMaps", {uid:context.uid});
+        navigation.navigate("UserMaps", {uid:context.user.uid});
+        console.log({user:context.user});
     }
 
     const onOptionsPressed = ()=>{        
