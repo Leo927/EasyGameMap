@@ -3,8 +3,8 @@ class Map{
         this._id = "";
         this.name = "";
         this.image = "";
-        this.width = 0;
-        this.height = 0;
+        this.width = "";
+        this.height = "";
         this.markerGroups = new Set();
         this.customIcons = {};
         this.markers = {};

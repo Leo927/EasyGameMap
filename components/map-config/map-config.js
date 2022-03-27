@@ -54,12 +54,19 @@ export default function MapConfig(){
     const onCreatePressed = async ()=>{
         if(map._id)
         {
-            const res = await updateMap(map._id, map, context.user);
-            console.log(res);
+            try{
+                const res = await updateMap(map._id, map, context.user);
+            }catch(e){
+                console.error(e);
+            }
         }
         else{
-            const res = await createMap(map, context.user);
-            setMap((m)=>({...m, _id:res?.mapId}));
+            try{
+                const res = await createMap(map, context.user);
+                setMap((m)=>({...m, _id:res?.mapId}));
+            }catch(e){
+                console.error(e);
+            }
         }
     }
 
@@ -76,18 +83,24 @@ export default function MapConfig(){
                         label="Name"
                         value={map.name}
                         placeholder = "Enter name"
-                        error = {(value)=>{value.name}}
+                        error = {(value)=>!value.name}
                         onChangeText = {(value)=>setMap((current)=>({...current, name:value}))}
                     />
-
-                    <Divider/>
                     
                     <TextInput
                         label="Width"
-                        value={map.width+''}
-                        placeholder = "Enter name"
-                        error = {(value)=>{isNaN(value)}}
+                        value={map.width+""}
+                        placeholder = "Enter width"
+                        error = {(value)=>isNaN(value)}
                         onChangeText = {(value)=>setMap((current)=>({...current, width:value}))}
+                    />
+
+                    <TextInput
+                        label="Height"
+                        value={map.height+""}
+                        placeholder = "Enter height"
+                        error = {(value)=>isNaN(value)}
+                        onChangeText = {(value)=>setMap((current)=>({...current, height:value}))}
                     />
 
 
@@ -98,17 +111,14 @@ export default function MapConfig(){
                         {map._id != ""?"Update":"Create"}
                     </Button>
 
-                    {map._id != "" && 
-                        <Button 
-                            title='View Map'
-                            style = {styles.row}
-                        />    
-                    }
-
                     
             
                     {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-                    <Button onPress={pickImage}>Pick Image</Button>
+                    <Button mode='outlined' onPress={pickImage}>Pick Image</Button>
+
+                    {map._id != "" && 
+                        <Button mode='outlined'>View Map</Button>
+                    }
                 </View>
             }
         </View>
