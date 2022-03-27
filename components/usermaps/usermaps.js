@@ -1,14 +1,20 @@
 import * as React from 'react';
-import { View, FlatList, StyleSheet, Text, Button, TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EGMContext from '../../context';
-import { getUserMaps } from '../../data/map';
-import { Card } from 'react-native-paper';
+import { getUserMaps, deleteMap } from '../../data/map';
+import { Card, Button, Text, Title, Portal, Dialog, Provider, Paragraph } from 'react-native-paper';
 
 export default function UserMaps(){
     const route = useRoute();
 
     const navigation = useNavigation();
+
+    const [delVisible, setDelVisible] = React.useState(false);
+
+    const [delAction, setDelAction] = React.useState(()=>{});
+
+    const [delTarget, setDelTarget] = React.useState(null);
 
     const context = React.useContext(EGMContext);
 
@@ -18,7 +24,7 @@ export default function UserMaps(){
     const onCreateMapPressed = ()=>{
         navigation.navigate("MapConfig");
     }
-    
+
     // set maps on uid change
     React.useEffect(async ()=>{
         if(!route?.params?.uid)
@@ -27,24 +33,51 @@ export default function UserMaps(){
         setMaps(result);
     }, [route.params]);
 
-    const renderMap = ({item, index})=>(
+    const renderMap = ({item, index})=>{
+        return(
         <Card style={styles.mapCard}>
-            <TouchableOpacity
-                onPress={()=>navigation.navigate("MapConfig", {mapId: item._id})}
-                >
-                <Text style={styles.mapTitle}>{item.name}</Text>
-            </TouchableOpacity>
-        </Card>
-    );
+            <Card.Title title={item.name}/>
+            <Card.Actions>
+                <Button onPress={()=>navigation.navigate("MapConfig", {mapId: item._id})}>Config</Button>
+                <Button>Open</Button>
+                <Button onPress={()=>{
+                    setDelVisible(true);
+                    setDelTarget(item._id);
+                }}>Delete</Button>
+            </Card.Actions>
+        </Card>);
+    };
 
     return(
         <View style={styles.container}>
+            <Portal>
+                <Dialog visible = {delVisible} onDismiss={()=>setDelVisible(false)}>
+                    <Dialog.Title>Delete Map</Dialog.Title>
+                    <Dialog.Content>
+                        <Paragraph>Are you sure you want to delete the map?</Paragraph>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={()=>{
+                            deleteMap(delTarget, context.user)
+                            .then((res)=>{
+                                if(res.deletedCount){
+                                    setMaps(maps.filter(m=>m._id != delTarget))                                    
+                                }
+                                setDelVisible(false);                                
+                            })
+                            .catch((e)=>{
+                                console.error(e);
+                            })
+                        }}>Confirm</Button>
+                        <Button onPress={()=>setDelVisible(false)}>Cancel</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
             {/* Only render create new map button when loggined and user id match map list id */}
             {context.user.uid && 
                 (context.user.uid== route?.params?.uid) &&
-                <Button title='Create New Map' onPress={onCreateMapPressed}/>}
+                <Button mode="outlined" onPress={onCreateMapPressed}>Create New Map</Button>}
             <View>
-                <Text>Maps</Text>
                 <FlatList
                     data={maps}
                     keyExtractor ={item=>item._id.toString()}

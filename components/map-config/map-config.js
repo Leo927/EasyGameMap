@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { View, Switch, StyleSheet, Text, Button, TouchableOpacity, Picker, FlatList } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EGMContext from '../../context';
 import { useURL } from 'expo-linking';
-import { Card, TextInput } from 'react-native-paper';
+import * as ImagePicker from 'expo-image-picker';
+import { Card, TextInput, Divider, Button, Text, Title } from 'react-native-paper';
 
 
 
@@ -19,19 +20,25 @@ export default function MapConfig(){
     const context = React.useContext(EGMContext);
 
     const [map, setMap] = React.useState(new Map());
+
     
-    // map info states
-    const [mapId, setMapId] = React.useState(undefined);
+    const [image, setImage] = React.useState(null);
 
-    const [mapName, setMapName] = React.useState("");
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        });
 
-    const [mapWidth, setMapWidth] = React.useState(0);
+        console.log(result);
 
-    const [mapHeight, setMapHeight] = React.useState(0);
-
-    const [markerGroups, setMarkerGroups] = React.useState([]);
-
-    const [customMapSize, setCustomMapSize] = React.useState(false);
+        if (!result.cancelled) {
+        setImage(result.uri);
+        }
+    };
 
     // on start, set map id from route params
     React.useEffect(async ()=>{
@@ -48,15 +55,14 @@ export default function MapConfig(){
     },[route.params])
 
     const onCreatePressed = async ()=>{
-        if(mapId)
+        if(map._id)
         {
-            const res = await updateMap(mapId, getMapData(), context.user);
+            const res = await updateMap(map._id, map, context.user);
             console.log(res);
         }
         else{
-            const res = await createMap(getMapData(), context.user);
-            setMapId(res?.mapId);
-            console.log(mapId);
+            const res = await createMap(map, context.user);
+            setMap((m)=>({...m, _id:res?.mapId}));
         }
     }
 
@@ -77,47 +83,23 @@ export default function MapConfig(){
                         onChangeText = {(value)=>setMap((current)=>({...current, name:value}))}
                     />
 
-                    <View style={styles.entry}>
-                        <Text>Define Custom Map Size</Text>
-                        <Switch
-                            value={customMapSize}
-                            onValueChange={setCustomMapSize}
-                        ></Switch>
-                    </View>
+                    <Divider/>
                     
-                    <Card>
-                        <Button 
-                            title='Infer Map Size'
-                        />
-
-                        <TextEntry 
-                            style={styles.row}
-                            label ="Width"
-                            description="horizontal dimension"
-                            placeholder = "Enter width"
-                            onValueChange = {setMapWidth}
-                            isValidInput={(value)=>!isNaN(value) && value > 0}
-                            errorText="Map width must be a number."/>
-
-                        <TextEntry 
-                            style={styles.row}
-                            label ="Height"
-                            description="Vertical dimension"
-                            placeholder = "Enter height"
-                            onValueChange = {setMapHeight}
-                            isValidInput={(value)=>!isNaN(value) && value > 0}
-                            errorText="Map width must be a number."/>
-                    </Card>
-                    <View style={styles.row}>
-                        <Text>Icon Groups</Text>
-                    </View>
+                    <TextInput
+                        label="Width"
+                        value={map.width+''}
+                        placeholder = "Enter name"
+                        error = {(value)=>{isNaN(value)}}
+                        onChangeText = {(value)=>setMap((current)=>({...current, width:value}))}
+                    />
 
 
                     <Button
                         style = {styles.row}
-                        title={map._id != ""?"Update":"Create"}
-                        onPress={onCreatePressed}
-                    />
+                        mode = {'outlined'}
+                        onPress={onCreatePressed}>
+                        {map._id != ""?"Update":"Create"}
+                    </Button>
 
                     {map._id != "" && 
                         <Button 
@@ -125,6 +107,11 @@ export default function MapConfig(){
                             style = {styles.row}
                         />    
                     }
+
+                    
+            
+                    {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                    <Button onPress={pickImage}>Pick Image</Button>
                 </View>
             }
         </View>

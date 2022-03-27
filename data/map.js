@@ -86,3 +86,23 @@ export async function getMap(mapId){
         return null;
     }
 }
+
+export async function deleteMap(mapId, user){
+    try{
+        const response = await fetch(endPoint, {
+            method: 'DELETE',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: user.token,
+                mapId: mapId,
+            })
+        });
+        return response.json();
+    }
+    catch(e){
+        console.error("Failed to delete map. "+e);
+    }
+}
