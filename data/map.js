@@ -15,13 +15,30 @@ export async function createMap(mapData, user){
                 mapData: mapData
             })
         });
-        return await response.json();
+        return response.json();
     } 
     catch(e){
         console.error(e);
     }
 }
 
-export function updateMap(id, mapData, user){
-
+export async function updateMap(mapId, mapData, user){
+    try{
+        const response = await fetch(endPoint, {
+            method: 'PATCH',
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: user.token,
+                mapId: mapId,
+                mapData: mapData
+            })
+        });
+        return response.json();
+    }
+    catch(e){
+        console.error("Failed to update map. "+e);
+    }
 }

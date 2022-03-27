@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Switch, StyleSheet, Text, Button, TouchableOpacity, Picker, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EGMContext from '../../context';
+import { useURL } from 'expo-linking';
 
 
 import { updateMap, createMap } from '../../data/map';
@@ -14,6 +15,8 @@ export default function MapConfig(){
     const context = React.useContext(EGMContext);
     
     // map info states
+    const [mapId, setMapId] = React.useState(undefined);
+
     const [mapName, setMapName] = React.useState("");
 
     const [mapWidth, setMapWidth] = React.useState(0);
@@ -23,6 +26,15 @@ export default function MapConfig(){
     const [markerGroups, setMarkerGroups] = React.useState([]);
 
     const [customMapSize, setCustomMapSize] = React.useState(false);
+
+    // on start, set map id from route params
+    React.useEffect(()=>{
+        if(route?.params?.mapId)
+            setMapId(route.params.mapId);
+        else
+            setMapId(undefined);
+        console.log(mapId);
+    },[route.params])
 
     //get the data representing the current map
     const getMapData = ()=>{
@@ -40,14 +52,15 @@ export default function MapConfig(){
     }
 
     const onCreatePressed = async ()=>{
-        if(route?.params?.mapId)
+        if(mapId)
         {
-            const res = await updateMap(route.params.mapId, getMapData(), context.user);
+            const res = await updateMap(mapId, getMapData(), context.user);
             console.log(res);
         }
         else{
             const res = await createMap(getMapData(), context.user);
-            console.log(res);
+            setMapId(res?.mapId);
+            console.log(mapId);
         }
     }
 
@@ -106,11 +119,11 @@ export default function MapConfig(){
 
                     <Button
                         style = {styles.row}
-                        title={route?.params?.mapId?"Update":"Create"}
+                        title={mapId?"Update":"Create"}
                         onPress={onCreatePressed}
                     />
 
-                    {route.params?.mapId != undefined && 
+                    {mapId != undefined && 
                         <Button 
                             title='View Map'
                             style = {styles.row}

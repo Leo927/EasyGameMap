@@ -13,7 +13,7 @@ export default function UserMaps(){
     const { uid } = route.params;
 
     const onCreateMapPressed = ()=>{
-        navigation.navigate("MapConfig", {mapId: "Place holder map id"});
+        navigation.navigate("MapConfig");
     }
 
     return(
