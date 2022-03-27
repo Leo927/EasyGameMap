@@ -1,3 +1,4 @@
+import { Map } from "../classes/map";
 import { SERVER_URL } from "../secrets"
 
 const endPoint = SERVER_URL + '/maps'
@@ -68,5 +69,17 @@ export async function getUserMaps(uid){
     catch(e){
         console.error(`Failed to get maps by user id ${uid}`);
         return [];
+    }
+}
+
+export async function getMap(mapId){
+    try{
+        const response = await fetch(endPoint + `/${mapId}`);
+        const responseJson = await response.json();
+        return responseJson;
+    }
+    catch(e){
+        console.error(`Failed to fetch map. Id ${mapId}`);
+        return new Map();
     }
 }
