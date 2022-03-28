@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import EGMContext from '../../context';
 import { Button, Text, Title, List } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -26,16 +26,21 @@ export default function MapConfigStack() {
   const [map, setMap] = React.useState(new Map());
 
   // on start, set map id from route params
-  React.useEffect(async () => {
-    if (!route?.params?.mapId)
-      return;
-    var tempMap = await getMap(route.params.mapId);
-    if (!tempMap) {
-      setMap(new Map());
-      return;
-    }
-    setMap(tempMap);
-  }, [route.params])
+  useFocusEffect(
+    React.useCallback(() => {
+      async function fetchMap() {
+        if (!route?.params?.mapId)
+          return;
+        const tempMap = await getMap(route.params.mapId);
+        if (!tempMap) {
+          setMap(new Map());
+          return;
+        }
+        setMap(tempMap);
+      }
+      fetchMap();
+    }, [route.params])
+  );
 
   const onCreatePressed = async () => {
     if (map._id) {
@@ -78,7 +83,7 @@ export default function MapConfigStack() {
         title="Underlay"
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialCommunityIcons name="image" color={color} size={26} />
           ),
 
         }}>
@@ -90,7 +95,20 @@ export default function MapConfigStack() {
         title="Markers"
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialCommunityIcons name="map-marker" color={color} size={26} />
+          ),
+
+        }}>
+        {() => (<MapConfigMarker map={map} setMap={setMap} />)}
+
+      </Tab.Screen>
+
+      <Tab.Screen
+        name="Map"
+        title="Map"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="map" color={color} size={26} />
           ),
 
         }}>

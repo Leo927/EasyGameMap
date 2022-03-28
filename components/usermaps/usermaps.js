@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import EGMContext from '../../context';
 import { getUserMaps, deleteMap, updateMap } from '../../data/map';
 import { Card, Button, Text, Title, Portal, Dialog, Provider, Paragraph } from 'react-native-paper';
@@ -34,13 +34,9 @@ export default function UserMaps({uid}){
         }
     };
 
-
-
-    React.useEffect(()=>{
-        const unsubscribe = navigation.addListener('focus', updateMaps);
-        // Return the function to unsubscribe from the event so it gets removed on unmount
-        return unsubscribe;
-    }, [navigation])
+    useFocusEffect(React.useCallback(()=>{
+      updateMaps();
+    },[]));
 
     const renderMap = ({item, index})=>{
         return(
