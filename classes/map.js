@@ -6,8 +6,8 @@ class Map{
       this.width = "";
       this.height = "";
       this.markerGroups = [];
-      this.customIcons = {};
-      this.markers = {};
+      this.customIcons = [];
+      this.markers = [];
   }
 }
 

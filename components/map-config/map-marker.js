@@ -2,6 +2,10 @@ import * as React from 'react';
 import { View, Image, StyleSheet, FlatList } from 'react-native';
 import { Button, Text, Dialog, Portal, TextInput, HelperText, Card, Title} from 'react-native-paper';
 
+import IconDetail from '../icon-detail/icon-detail';
+import Icon from '../../classes/icon';
+import uuid from 'react-native-uuid';
+
 export default function MapConfigMarker({ map, setMap }) {
   const [addGroupDiagVisible, setAddGroupDiagVisible] = React.useState(false);
 
@@ -9,8 +13,13 @@ export default function MapConfigMarker({ map, setMap }) {
 
   const [newGroupStarted, setNewGroupStarted] = React.useState(false);
 
+  const [editingIcon, setEditingIcon] = React.useState(new Icon());
+
   // usd for displaying error msg when adding new marker group. 
   const [errMsg, setErrMsg]  = React.useState("");
+
+  // used for displying icon detail modal.
+  const [iconDiagVisible, setIconDiagVisible] = React.useState(false);
 
   const onAddGroupDismissed = ()=>{
     setNewGroupName("");
@@ -33,6 +42,47 @@ export default function MapConfigMarker({ map, setMap }) {
 
     setErrMsg("");
     return true;
+  }
+
+  // invoked when Add Custom Icon Button is hit
+  const onAddCustIconButtonClicked = ()=>{
+    setEditingIcon(new Icon());
+    setIconDiagVisible(true);
+  }
+
+  // invoked when icon detail dialogue is confirmed. 
+  const onIconEditConfirmed = async ()=>{
+    try{ 
+      const foundId = map.customIcons.findIndex(i=>i._id == editingIcon._id);     
+      if(foundId <0){//create new icon
+        // check duplicate name
+        const sameNames = map.customIcons.filter(i=>i.name == editingIcon.name);
+        if(sameNames.length > 0)
+          return;
+        const id = uuid.v1();
+        editingIcon._id = id;
+        map.customIcons.push(editingIcon);
+        console.log(map.customIcons, editingIcon);
+        setIconDiagVisible(false);
+      }
+      else{//edit existing icon
+        // check duplicate name
+        const sameNames = map.customIcons.filter(i=>i.name == editingIcon.name);
+        if(sameNames.length > 1)
+          return;
+        var copy = map.customIcons;
+        copy[foundId] = editingIcon;
+        setMap({...map, customIcons:copy});
+        setIconDiagVisible(false);
+      }
+    }catch(e){
+      console.error(`Failed to edit icon. ${e}`);
+    }
+  }
+
+  // invoked when icon detail dialogue is cancelled. 
+  const onIconEditCancelled = ()=>{
+    setIconDiagVisible(false);
   }
 
   // check the group name for error
@@ -79,11 +129,26 @@ export default function MapConfigMarker({ map, setMap }) {
       <Card.Actions>
         <Button>Edit</Button>
         <Button onPress={()=>{          
-          map.markerGroups = map.markerGroups.filter(i=>i!=item);
+          map.markerGroups.splice(index, 1);
           }}>Delete</Button>
       </Card.Actions>
     </Card>
   );
+
+  const renderIconCard = ({item, index})=>{
+    return (<Card>
+      <Card.Title title={item.name}/>
+      <Card.Actions>
+        <Button onPress={()=>{
+          setEditingIcon(item);
+          setIconDiagVisible(true);
+        }}>Edit</Button>
+        <Button onPress={()=>{          
+          map.customIcons.splice(index, 1);
+          }}>Delete</Button>
+      </Card.Actions>
+    </Card>
+  )};
 
   return (
     <View style={styles.container}>
@@ -123,6 +188,21 @@ export default function MapConfigMarker({ map, setMap }) {
         extraData={map}
         keyExtractor={(v, i)=>i.toString()}
         renderItem={renderMarkerGroup}
+      ></FlatList>
+
+      <IconDetail visible={iconDiagVisible}
+        setVisible={setIconDiagVisible}
+        icon={editingIcon}
+        setIcon={setEditingIcon}
+        onConfirm={onIconEditConfirmed}
+        onCancel={onIconEditCancelled}/>
+      <Button mode='outlined' onPress={onAddCustIconButtonClicked}>Add Custom Icon</Button>
+
+      <FlatList
+        data={map.customIcons}
+        extraData={map}
+        keyExtractor={i=>i._id}
+        renderItem={renderIconCard}
       ></FlatList>
     </View>
   );
