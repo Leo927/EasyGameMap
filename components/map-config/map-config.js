@@ -2,126 +2,88 @@ import * as React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EGMContext from '../../context';
-import { useURL } from 'expo-linking';
-import * as ImagePicker from 'expo-image-picker';
-import { Card, TextInput, Divider, Button, Text, Title } from 'react-native-paper';
+import { Button, Text, Title, List } from 'react-native-paper';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 
 import { updateMap, createMap } from '../../data/map';
-import TextEntry from '../text-input/text-input';
-import PullToRefreshViewNativeComponent from 'react-native/Libraries/Components/RefreshControl/PullToRefreshViewNativeComponent';
 import { Map } from '../../classes/map';
 import { getMap } from '../../data/map';
+import MapConfigGeneral from './map-general';
+import MapConfigImage from './map-image';
 
-export default function MapConfig(){
+const Tab = createMaterialBottomTabNavigator();
+
+export default function MapConfigStack() {
+
     const route = useRoute();
 
     const context = React.useContext(EGMContext);
 
     const [map, setMap] = React.useState(new Map());
 
-    
-    const [image, setImage] = React.useState(null);
-
-    const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-        });
-
-        if (!result.cancelled) {
-        setImage(result.uri);
-        }
-    };
-
     // on start, set map id from route params
-    React.useEffect(async ()=>{
-        
-        if(!route?.params?.mapId)
+    React.useEffect(async () => {
+        if (!route?.params?.mapId)
             return;
         var tempMap = await getMap(route.params.mapId);
-        if(!tempMap) {
+        if (!tempMap) {
             setMap(new Map());
             return;
         }
         setMap(tempMap);
-    },[route.params])
+    }, [route.params])
 
-    const onCreatePressed = async ()=>{
-        if(map._id)
-        {
-            try{
+    const onCreatePressed = async () => {
+        if (map._id) {
+            try {
                 const res = await updateMap(map._id, map, context.user);
-            }catch(e){
+            } catch (e) {
                 console.error(e);
             }
         }
-        else{
-            try{
+        else {
+            try {
                 const res = await createMap(map, context.user);
-                setMap((m)=>({...m, _id:res?.mapId}));
-            }catch(e){
+                setMap((m) => ({ ...m, _id: res?.mapId }));
+            } catch (e) {
                 console.error(e);
             }
         }
     }
 
-    return(
-        <View style={styles.container}>
-            {/*Give error message if user isn't logged in.*/}
-            {context?.user?.uid==undefined &&
-                <Text>Guest cannot create maps.</Text>
-            }
-            {/*Only load when user is logged in */}
-            {context?.user?.uid != undefined &&
-                <View>
-                    <TextInput
-                        label="Name"
-                        value={map.name}
-                        placeholder = "Enter name"
-                        error = {(value)=>!value.name}
-                        onChangeText = {(value)=>setMap((current)=>({...current, name:value}))}
-                    />
-                    
-                    <TextInput
-                        label="Width"
-                        value={map.width+""}
-                        placeholder = "Enter width"
-                        error = {(value)=>isNaN(value)}
-                        onChangeText = {(value)=>setMap((current)=>({...current, width:value}))}
-                    />
+    return (
+        <Tab.Navigator
+            barStyle={{
+                backgroundColor: "white"
+            }}
+        >
+            <Tab.Screen
+                name="general"
+                title="General"
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={26} />
+                    ),
 
-                    <TextInput
-                        label="Height"
-                        value={map.height+""}
-                        placeholder = "Enter height"
-                        error = {(value)=>isNaN(value)}
-                        onChangeText = {(value)=>setMap((current)=>({...current, height:value}))}
-                    />
+                }}>
+                {() => (<MapConfigGeneral map={map} setMap={setMap} />)}
+            </Tab.Screen>
 
+            <Tab.Screen
+                name="Underlay"
+                title="Underlay"
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={26} />
+                    ),
 
-                    <Button
-                        style = {styles.row}
-                        mode = {'outlined'}
-                        onPress={onCreatePressed}>
-                        {map._id != ""?"Update":"Create"}
-                    </Button>
-
-                    
-            
-                    {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-                    <Button mode='outlined' onPress={pickImage}>Pick Image</Button>
-
-                    {map._id != "" && 
-                        <Button mode='outlined'>View Map</Button>
-                    }
-                </View>
-            }
-        </View>
+                }}>
+                {() => (<MapConfigImage map={map} setMap={setMap} />)}
+            </Tab.Screen>
+        </Tab.Navigator>
     );
 }
 
@@ -130,7 +92,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 18
     },
-    container:{
+    container: {
         marginLeft: "10%",
         marginRight: "10%",
         marginTop: 20,
@@ -139,8 +101,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    row:{
+    row: {
         marginBottom: 10,
     },
-    
+
 });

@@ -10,7 +10,7 @@ import EGMContext from './context';
 import NavBar from './components/nav-bar/nav-bar';
 import HomeScreen from './components/home-screen/home-screen';
 import ProfileScreen from './components/profile-screen/profile-screen';
-import MapConfig from './components/map-config/map-config';
+import MapConfigStack from './components/map-config/map-config';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,8 +34,8 @@ const App = () => {
             />
 
             <Stack.Screen
-              name="MapConfig"
-              component={MapConfig}
+              name="MapConfigStack"
+              component={MapConfigStack}
               options={{
                 headerRight: ()=>(<NavBar/>),
               }}
