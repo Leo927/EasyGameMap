@@ -18,91 +18,91 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function MapConfigStack() {
 
-    const route = useRoute();
+  const route = useRoute();
 
-    const context = React.useContext(EGMContext);
+  const context = React.useContext(EGMContext);
 
-    const [map, setMap] = React.useState(new Map());
+  const [map, setMap] = React.useState(new Map());
 
-    // on start, set map id from route params
-    React.useEffect(async () => {
-        if (!route?.params?.mapId)
-            return;
-        var tempMap = await getMap(route.params.mapId);
-        if (!tempMap) {
-            setMap(new Map());
-            return;
-        }
-        setMap(tempMap);
-    }, [route.params])
-
-    const onCreatePressed = async () => {
-        if (map._id) {
-            try {
-                const res = await updateMap(map._id, map, context.user);
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        else {
-            try {
-                const res = await createMap(map, context.user);
-                setMap((m) => ({ ...m, _id: res?.mapId }));
-            } catch (e) {
-                console.error(e);
-            }
-        }
+  // on start, set map id from route params
+  React.useEffect(async () => {
+    if (!route?.params?.mapId)
+      return;
+    var tempMap = await getMap(route.params.mapId);
+    if (!tempMap) {
+      setMap(new Map());
+      return;
     }
+    setMap(tempMap);
+  }, [route.params])
 
-    return (
-        <Tab.Navigator
-            barStyle={{
-                backgroundColor: "white"
-            }}
-        >
-            <Tab.Screen
-                name="general"
-                title="General"
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="home" color={color} size={26} />
-                    ),
+  const onCreatePressed = async () => {
+    if (map._id) {
+      try {
+        const res = await updateMap(map._id, map, context.user);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    else {
+      try {
+        const res = await createMap(map, context.user);
+        setMap((m) => ({ ...m, _id: res?.mapId }));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
 
-                }}>
-                {() => (<MapConfigGeneral map={map} setMap={setMap} />)}
-            </Tab.Screen>
+  return (
+    <Tab.Navigator
+      barStyle={{
+        backgroundColor: "white"
+      }}
+    >
+      <Tab.Screen
+        name="general"
+        title="General"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
 
-            <Tab.Screen
-                name="Underlay"
-                title="Underlay"
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="home" color={color} size={26} />
-                    ),
+        }}>
+        {() => (<MapConfigGeneral map={map} setMap={setMap} />)}
+      </Tab.Screen>
 
-                }}>
-                {() => (<MapConfigImage map={map} setMap={setMap} />)}
-            </Tab.Screen>
-        </Tab.Navigator>
-    );
+      <Tab.Screen
+        name="Underlay"
+        title="Underlay"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+
+        }}>
+        {() => (<MapConfigImage map={map} setMap={setMap} />)}
+      </Tab.Screen>
+    </Tab.Navigator>
+  );
 }
 
 const styles = StyleSheet.create({
-    header: {
-        textAlign: 'center',
-        fontSize: 18
-    },
-    container: {
-        marginLeft: "10%",
-        marginRight: "10%",
-        marginTop: 20,
-    },
-    entry: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    row: {
-        marginBottom: 10,
-    },
+  header: {
+    textAlign: 'center',
+    fontSize: 18
+  },
+  container: {
+    marginLeft: "10%",
+    marginRight: "10%",
+    marginTop: 20,
+  },
+  entry: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  row: {
+    marginBottom: 10,
+  },
 
 });
