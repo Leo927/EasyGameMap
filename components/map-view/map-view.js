@@ -119,19 +119,6 @@ export default function EgmMapView(props) {
     });
   }
 
-  function attachMarkerLayouts(markers) {
-    markers.map(m => {
-      const layout = GetAbsPosLayout(m)
-      return { ...m, _layout: layout };
-    });
-  }
-
-  React.useEffect(() => {
-    console.log(`mapPos changed`, mapPos);
-    map.markers = attachMarkerLayouts(map.markers);
-  }, [mapPos, mapZoom, map])
-
-
   const renderMarker = (item) => {
     return (<View
       key={item.id}
@@ -162,7 +149,7 @@ export default function EgmMapView(props) {
       {map.markers.map(m => (<MapViewMarker
         key={m.id}
         marker={m}
-        posLayout={GetAbsPosLayout(m, mapPos, mapZoom)}
+        posLayout={GetAbsPosLayout(m)}
         map={map} />))}
 
 
