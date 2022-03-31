@@ -15,7 +15,10 @@ export default function MapConfigImage({ map, setMap }) {
     let imgString = await FileSystem.readAsStringAsync(result.uri, {
       encoding: FileSystem.EncodingType.Base64,
     })
-    setMap({ ...map, image: imgString });
+    setMap((c)=>({ ...c, image: imgString }));
+    Image.getSize(`data:image/gif;base64,${imgString}`, (width, height)=>{
+      setMap(c=>({...c, width, height}));
+    })
   };
 
   return (
