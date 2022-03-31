@@ -11,7 +11,7 @@ import {
   Animated,
   FlatList
 } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Portal, Text } from 'react-native-paper';
 
 
 // used to generate new id
@@ -21,6 +21,7 @@ import uuid from 'react-native-uuid';
 
 import GetBuiltInIcons from '../../data/built-in-icons';
 import MapViewMarker from './map-view-marker';
+import MarkerDetail from '../marker-detail/marker-detail';
 
 
 
@@ -31,6 +32,15 @@ export default function EgmMapView(props) {
   // controls the zoom level of the map
   const [mapZoom, setMapZoom] = React.useState(1);
 
+  // controls the marker detail dialog visibility
+  const [markerDetailVisible, setMarkerDetailVisible] = React.useState(false);
+
+  // stores the marker that is being edited
+  const [editingMarker, setEditingMarker] = React.useState(null);
+
+  // some functions are only avialble in edit mode
+  const [isEdit, setIsEdit] = React.useState(true);
+
   // left for potential dynamic swapping
   const iconSize = { x: 50, y: 50 }
   // control map panning
@@ -38,14 +48,14 @@ export default function EgmMapView(props) {
     onMoveShouldSetPanResponder: (evt, gestureState) => true,
     onPanResponderMove: (e, g) => {
       // change mapPos
-      setMapPos((current)=>({
+      setMapPos((current) => ({
         x: current.x + g.dx,
         y: current.y + g.dy
       }));
     }
   })
 
-  const map = {
+  const [map, setMap] = React.useState({
     Image: 'https://www.powerpyx.com/wp-content/uploads/elden-ring-full-world-map.jpg',
     name: "Elden Ring",
     width: 1920,
@@ -73,7 +83,7 @@ export default function EgmMapView(props) {
         ]
       }
     ]
-  }
+  });
 
 
   /**
@@ -106,10 +116,10 @@ export default function EgmMapView(props) {
    * 
    * @returns The position of the item on the screen
    */
-  function mapXYToScreenXY(mapXY){
+  function mapXYToScreenXY(mapXY) {
     const absPosX = mapPos.x + mapXY.x * mapZoom;
     const absPosY = mapPos.y + mapXY.y * mapZoom;
-    return {x: absPosX, y: absPosY}
+    return { x: absPosX, y: absPosY }
   }
 
   /**
@@ -121,7 +131,7 @@ export default function EgmMapView(props) {
    * 
    * @returns The position of the item on the map
    */
-  function screenXYtoMapXY(screenXY){
+  function screenXYtoMapXY(screenXY) {
     throw "Not implmeneted";
   }
 
@@ -136,9 +146,51 @@ export default function EgmMapView(props) {
    * Returns:
    * None
    */
-  function onMarkerPressed(marker){
-    console.log("Marker pressed");
+  function onMarkerPressed(marker) {
+    setEditingMarker(marker);
+    setMarkerDetailVisible(true);
   }
+
+  /**
+   * @description
+   * Handle marker delete
+   * 
+   * @param {Marker} marker the marker to delete
+   * 
+   * Side Effects:
+   * <1> marker is removed from the map
+   */
+  function onMarkerDeleted(marker){
+    setMap(currentMap=>{
+      const idx = currentMap.markers.findIndex(m => m.id == editingMarker.id);
+      if(idx >= 0)
+        currentMap.markers.splice(idx, 1);
+      return currentMap;
+    });
+    setMarkerDetailVisible(false);
+  }
+
+  /**
+   * Merge the changes from editingMarker into the map
+   */
+  function mergeEditingMarker(){
+    if (!editingMarker) {
+      return;
+    }
+    setMap(currentMap=>{
+      const idx = currentMap.markers.findIndex(m => m.id == editingMarker.id);
+      if(idx < 0) 
+        return currentMap;
+      currentMap.markers.splice(idx, 1);
+      currentMap.markers.push(editingMarker);
+      return currentMap;
+    });
+  }
+
+  React.useEffect(()=>{
+    mergeEditingMarker();
+  }
+  ,[editingMarker])
 
   return (
     <View style={styles.container}>
@@ -152,14 +204,22 @@ export default function EgmMapView(props) {
           { left: mapPos.x, top: mapPos.y },
           styles.mapImage]}
       />
-
+      <MarkerDetail
+        visible={markerDetailVisible}
+        setVisible={setMarkerDetailVisible}
+        marker={editingMarker}
+        setMarker={setEditingMarker}
+        onDismiss={()=>setMarkerDetailVisible(false)}
+        onDelete = {onMarkerDeleted}
+        isEdit = {isEdit}
+      />
       {map.markers.map(m => (<MapViewMarker
         key={m.id}
         marker={m}
         posLayout={GetAbsPosLayout(m)}
-        map={map} 
+        map={map}
         onPress={onMarkerPressed}
-        />))}
+      />))}
 
 
     </View>
