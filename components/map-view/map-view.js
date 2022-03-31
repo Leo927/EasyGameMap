@@ -35,25 +35,13 @@ export default function EgmMapView(props) {
   const iconSize = { x: 50, y: 50 }
   // control map panning
   const mapPan = PanResponder.create({
-    onStartShouldSetPanResponder: (evt, gestureState) => true,
-    onStartShouldSetPanResponderCapture: (evt, gestureState) =>
-      true,
     onMoveShouldSetPanResponder: (evt, gestureState) => true,
-    onMoveShouldSetPanResponderCapture: (evt, gestureState) =>
-      true,
-    //taken from Dr.TT lecture code.
-    onPanResponderGrant: (e, g) => {
-    },
-
     onPanResponderMove: (e, g) => {
-      console.log(`pan moved`, g);
+      // change mapPos
       setMapPos((current)=>({
         x: current.x + g.dx,
         y: current.y + g.dy
       }));
-    },
-    onPanResponderRelease: (e, gestureState) => {
-
     }
   })
 
@@ -73,6 +61,7 @@ export default function EgmMapView(props) {
     markers: [
       {
         id: 0,
+        label: 'Smile',
         title: 'Smile Face',
         description: 'This is a simply smile face',
         isCustomIcon: true,
@@ -106,32 +95,50 @@ export default function EgmMapView(props) {
     return { left: absPosX, top: absPosY }
   }
 
-
-  // reset the map size to default.
-  const resetView = () => {
-    Image.getSize(map.Image, async (mapWidth, mapHeight) => {
-      // place the image at the center
-      const window = Dimensions.get('window');
-      const center_left = window.width / 2;
-      const center_top = window.height / 2;
-      //mapPos.setValue({x:center_left, y:center_top});
-      setMapZoom(2);
-    });
+  /**
+   * Get the absolute screen position from a relative map position
+   *   
+   * @param {{x,y}} mapXY the position of something on the map
+   * 
+   * Preconditions:
+   * <1> mapPos must be valid
+   * <2> mapZoom must be valid
+   * 
+   * @returns The position of the item on the screen
+   */
+  function mapXYToScreenXY(mapXY){
+    const absPosX = mapPos.x + mapXY.x * mapZoom;
+    const absPosY = mapPos.y + mapXY.y * mapZoom;
+    return {x: absPosX, y: absPosY}
   }
 
-  const renderMarker = (item) => {
-    return (<View
-      key={item.id}
-      style={[{ left: absPosX, top: absPosY },
-      styles.marker]}>
-      {/* <Image
-        source={{ uri: `data:image/gif;base64,${item.image}` }}
-        style={{ width: 50, height: 50 }} 
-      /> */}
-      <Text>{markerIcon}</Text>
-      {item?.label != undefined && <Text key={item.id}>{item?.label}</Text>}
-    </View>);
-  };
+  /**
+   * Get the relative map position from the absolute screen position.
+   * @param {{x, y}} screenXY 
+   * Preconditions:
+   * <1> mapPos must be valid
+   * <2> mapZoom must be valid
+   * 
+   * @returns The position of the item on the map
+   */
+  function screenXYtoMapXY(screenXY){
+    throw "Not implmeneted";
+  }
+
+  /**
+   * Handle marker pressed event
+   * @param {Marker} marker 
+   * 
+   * Side Effects:
+   * <1> open marker pressed dialog
+   * <2> set editing marker to the given marker
+   * 
+   * Returns:
+   * None
+   */
+  function onMarkerPressed(marker){
+    console.log("Marker pressed");
+  }
 
   return (
     <View style={styles.container}>
@@ -150,7 +157,9 @@ export default function EgmMapView(props) {
         key={m.id}
         marker={m}
         posLayout={GetAbsPosLayout(m)}
-        map={map} />))}
+        map={map} 
+        onPress={onMarkerPressed}
+        />))}
 
 
     </View>

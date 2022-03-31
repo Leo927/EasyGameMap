@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { View, StyleSheet, Animated, Text } from "react-native";
+import { View, StyleSheet, Animated, Text, Image, TouchableOpacity, PanResponder } from "react-native";
 import Marker from '../../classes/marker';
 
 /**
@@ -12,7 +12,13 @@ import Marker from '../../classes/marker';
  * <2> mapPos: Aniamted.ValueXY. represent the current map position
  * <3> posLayout: {left, top} 
  */
-export default function MapViewMarker({ marker, map, posLayout}) {
+export default function MapViewMarker({ marker, map, posLayout, onPress }) {
+  const markerPan = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) => true,
+    onPanResponderMove: (e, g) => {
+    }
+  })
+
   /**
    * get the displayed icon.
    * 
@@ -50,17 +56,30 @@ export default function MapViewMarker({ marker, map, posLayout}) {
       style={[
         posLayout,
         styles.marker]}>
-      {/* <Image
-      source={{ uri: `data:image/gif;base64,${item.image}` }}
-      style={{ width: 50, height: 50 }} 
-    /> */}
-      <Text key={marker.id}>{getIcon()}</Text>
-      {marker?.label != undefined && <Text key={marker.id}>{marker?.label}</Text>}
-    </View>);
+      <TouchableOpacity
+        onPress={()=>onPress(marker)}
+      >        
+        <Image
+          style={styles.markerImage}
+          source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Full_Star_Yellow.svg/64px-Full_Star_Yellow.svg.png?20061109100643' }} />
+
+      </TouchableOpacity>
+      {marker?.label != undefined &&
+        <Text style={styles.label} key={marker.id}>{marker?.label}</Text>
+      }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   marker: {
     position: 'absolute',
+  },
+  markerImage: {
+    width: 50,
+    height: 50,
+  },
+  label: {
+    textAlign: 'center',
   }
 })
