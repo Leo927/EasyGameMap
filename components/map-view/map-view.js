@@ -177,6 +177,9 @@ export default function EgmMapView(props) {
 
       newMarker.top = mapRelativePos.y;
 
+      setEditingMarker(newMarker);
+      setMarkerDetailVisible(true);
+
       currentMap.markers.push(newMarker);
       return {...currentMap};
     });
