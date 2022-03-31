@@ -28,6 +28,7 @@
     "expo-status-bar": "~1.2.0",
     "expo-updates": "~0.11.6",
     "expo-web-browser": "~10.1.0",
+    "mongodb": "^4.4.1",
     "nvm": "^0.0.4",
     "qs": "^6.10.3",
     "react": "17.0.1",

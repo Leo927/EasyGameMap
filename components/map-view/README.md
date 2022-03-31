@@ -53,7 +53,7 @@ In either edit mode or view mode, the user can click/touch on a marker to show a
 The relative position of each marker should be provided as ```Marker.top``` and ```Marker.left```. This is the unzoomed offset from the top left corner of the map. 
 
 The absolute position of each marker can be calculated as:
-markerPos + [Marker.left, Marker.top] * zoom
+mapPos + [Marker.left, Marker.top] * zoom
 
 The size of markers are not affected by ```mapZoom```.
 
