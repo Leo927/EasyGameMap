@@ -8,7 +8,7 @@ import {
   PanResponder,
   Animated,
 } from 'react-native';
-import { Switch, Text } from 'react-native-paper';
+import { Button, Switch, Text } from 'react-native-paper';
 
 
 // used to generate new id
@@ -19,6 +19,7 @@ import uuid from 'react-native-uuid';
 import GetBuiltInIcons from '../../data/built-in-icons';
 import MapViewMarker from './map-view-marker';
 import MarkerDetail from '../marker-detail/marker-detail';
+import Marker from '../../classes/marker';
 
 
 
@@ -69,7 +70,7 @@ export default function EgmMapView(props) {
     },
     markers: [
       {
-        id: 0,
+        _id: 0,
         label: 'Smile',
         title: 'Smile Face',
         description: 'This is a simply smile face',
@@ -150,6 +151,14 @@ export default function EgmMapView(props) {
     setMarkerDetailVisible(true);
   }
 
+  function createNewMarker(){
+    setMap(currentMap=>{
+      const newMarker = new Marker();
+      currentMap.markers.push(newMarker);
+      return currentMap;
+    });
+  }
+
   /**
    * @description
    * Handle marker delete
@@ -161,7 +170,7 @@ export default function EgmMapView(props) {
    */
   function onMarkerDeleted(marker){
     setMap(currentMap=>{
-      const idx = currentMap.markers.findIndex(m => m.id == editingMarker.id);
+      const idx = currentMap.markers.findIndex(m => m._id == editingMarker._id);
       if(idx >= 0)
         currentMap.markers.splice(idx, 1);
       return currentMap;
@@ -177,7 +186,7 @@ export default function EgmMapView(props) {
       return;
     }
     setMap(currentMap=>{
-      const idx = currentMap.markers.findIndex(m => m.id == editingMarker.id);
+      const idx = currentMap.markers.findIndex(m => m._id == editingMarker._id);
       if(idx < 0) 
         return currentMap;
       currentMap.markers.splice(idx, 1);
@@ -213,7 +222,7 @@ export default function EgmMapView(props) {
         isEdit = {isEdit}
       />
       {map.markers.map(m => (<MapViewMarker
-        key={m.id}
+        key={m._id}
         marker={m}
         posLayout={GetAbsPosLayout(m)}
         map={map}
@@ -230,6 +239,13 @@ export default function EgmMapView(props) {
             value={isEdit}
             onValueChange={setIsEdit}
           />
+        </View>
+      }
+
+      {/* ToolBox */}
+      {isEdit&&
+        <View style={styles.toolbox}>
+          <Button mode='outlined' onPress={createNewMarker}>New Marker</Button>
         </View>
       }
     </View>
@@ -258,6 +274,14 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems:'center',
     top: 20,
+    right: 20
+  },
+  toolbox:{
+    position: 'absolute',
+    backgroundColor: 'white',
+    borderRadius: 2,
+    padding: 2,
+    top: 100,
     right: 20
   }
 });

@@ -52,7 +52,7 @@ export default function MapViewMarker({ marker, map, posLayout, onPress }) {
 
   return (
     <View
-      key={marker.id}
+      key={marker._id}
       style={[
         posLayout,
         styles.marker]}>
@@ -65,7 +65,7 @@ export default function MapViewMarker({ marker, map, posLayout, onPress }) {
 
       </TouchableOpacity>
       {marker?.label != undefined &&
-        <Text style={styles.label} key={marker.id}>{marker?.label}</Text>
+        <Text style={styles.label}>{marker?.label}</Text>
       }
     </View>
   );
