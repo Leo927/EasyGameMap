@@ -23,6 +23,7 @@ import Marker from '../../classes/marker';
 
 
 
+
 export default function EgmMapView(props) {
   // controls the position of the top left corner of the map 
   // from the top left corner of the parent
@@ -70,7 +71,7 @@ export default function EgmMapView(props) {
     },
     markers: [
       {
-        _id: 0,
+        _id: uuid.v4(),
         label: 'Smile',
         title: 'Smile Face',
         description: 'This is a simply smile face',
@@ -153,9 +154,25 @@ export default function EgmMapView(props) {
     setMarkerDetailVisible(true);
   }
 
+  /**
+   * Handle create new marker. Place the new marker at the center of the screen.
+   * 
+   * SideEffects:
+   * <1> map is updated.
+   */
   function createNewMarker(){
     setMap(currentMap=>{
       const newMarker = new Marker();
+      // get absolute screen center
+      const centerOfScreen = {x:containerSize.x/2, y: containerSize.y/2};
+
+      // convert to map relative position
+      const mapRelativePos = screenXYtoMapXY(centerOfScreen);
+
+      newMarker.left = mapRelativePos.x;
+
+      newMarker.top = mapRelativePos.y;
+
       currentMap.markers.push(newMarker);
       return currentMap;
     });
