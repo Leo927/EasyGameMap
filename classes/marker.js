@@ -1,10 +1,13 @@
 /**
  * Represents a marker shown on a map
  */
-class Marker{
+
+
+import uuid from 'react-native-uuid';
+export default class Marker{
     constructor(){
         //unique id of the marker,
-        this._id = "";
+        this._id = uuid.v4();
 
         // Title of marker. Shown in the popup modal as title.
         this.title = "";
@@ -21,7 +24,7 @@ class Marker{
         
         // id of the icon. See isCustomIcon for more detail 
         // of where it comes from. 
-        this.iconId = "";
+        this.iconId = "default";
 
         // number representing the distance of 
         // the center of icon from the left edge of the map. 
