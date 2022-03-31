@@ -17,7 +17,7 @@ export default function MapConfigMarker({ map, setMap }) {
 
   // usd for displaying error msg when adding new marker group. 
   const [errMsg, setErrMsg]  = React.useState("");
-
+  
   // used for displying icon detail modal.
   const [iconDiagVisible, setIconDiagVisible] = React.useState(false);
 

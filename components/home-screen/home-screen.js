@@ -1,18 +1,18 @@
 import {View, StyleSheet} from 'react-native';
 import { Text } from 'react-native-paper';
-import MapView from '../map-view/map-view';
+import EgmMapView from '../map-view/map-view';
 
 export default function HomeScreen({navigation}) {
     return (
         <View style={styles.container}>
             <Text>This is home screen</Text>
-            <MapView></MapView>
+            <EgmMapView></EgmMapView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container:{
-        flex:1
+        flex:1,
     }
 })
