@@ -20,6 +20,7 @@ import GetBuiltInIcons from '../../data/built-in-icons';
 import MapViewMarker from './map-view-marker';
 import MarkerDetail from '../marker-detail/marker-detail';
 import Marker from '../../classes/marker';
+import Icon from '../../classes/icon';
 
 
 
@@ -69,9 +70,9 @@ export default function EgmMapView(props) {
       'Potato',
       'Chili',
     ],
-    customIcons: {
-      smile: '😀'
-    },
+    customIcons: [
+      Icon.create('star', 'starImage')
+    ],  
     markers: [
       {
         _id: uuid.v4(),
@@ -247,6 +248,7 @@ export default function EgmMapView(props) {
         onDismiss={()=>setMarkerDetailVisible(false)}
         onDelete = {onMarkerDeleted}
         isEdit = {isEdit}
+        map = {map}
       />
       {map.markers.map(m => (<MapViewMarker
         key={m._id}

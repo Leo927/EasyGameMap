@@ -3,8 +3,10 @@
  */
 
 import React from 'react';
-import { Dialog, Text, Button, TextInput, Portal } from 'react-native-paper';
+import { StyleSheet, View, Picker } from 'react-native';
+import { Dialog, Text, Button, TextInput, Portal, Switch } from 'react-native-paper';
 
+import GetBuiltInIcons from '../../data/built-in-icons';
 
 /**
  * 
@@ -16,6 +18,7 @@ import { Dialog, Text, Button, TextInput, Portal } from 'react-native-paper';
  * <5> onDismiss: called when dimissed 
  * <6> onDelete: called when Delete is pressed
  * <7> isEdit: whether in edit mode. Editings are disabled when in edit mode.
+ * <8> map: the map data
  * @returns 
  */
 export default function MarkerDetail({ visible,
@@ -24,7 +27,8 @@ export default function MarkerDetail({ visible,
   setMarker,
   onDismiss,
   onDelete,
-  isEdit }) {
+  isEdit,
+  map }) {
   return (
     <Portal>
       {marker &&
@@ -38,26 +42,88 @@ export default function MarkerDetail({ visible,
           <Dialog.Content>
             <Text> {!isEdit && marker.description}</Text>
             {isEdit &&
-              <TextInput
-                label="Title"
-                value={marker.title}
-                onChangeText={(t) => setMarker({ ...marker, title: t })}
-              />}
-            {isEdit &&
-              <TextInput
-                label="Label"
-                value={marker.label}
-                onChangeText={(t) => setMarker({ ...marker, label: t })}
-              />}
+              <View
+                style={styles.row}>
+                <TextInput
+                  style={{ flex: 1 }}
+                  label="Title"
+                  value={marker.title}
+                  onChangeText={(t) => setMarker({ ...marker, title: t })}
+                />
+                <TextInput
+                  label="Label"
+                  style={{ flex: 1 }}
+                  value={marker.label}
+                  onChangeText={(t) => setMarker({ ...marker, label: t })}
+                />
+              </View>}
+
             {isEdit &&
               <TextInput
                 label="Description"
                 value={marker.description}
                 onChangeText={(t) => setMarker({ ...marker, description: t })}
               />}
+            {isEdit &&
+              <View style={styles.row}>
+                <TextInput
+                  style={{ flex: 1 }}
+                  label="x"
+                  value={marker.left}
+                  onChangeText={(t) => setMarker({ ...marker, left: t })}
+                />
+                <TextInput
+                  style={{ flex: 1 }}
+                  label="y"
+                  value={marker.top}
+                  onChangeText={(t) => setMarker({ ...marker, top: t })}
+                />
+              </View>}
+
+            {isEdit &&
+              <View style={styles.row}>
+                <Text>Use Custom Icon</Text>
+                <Switch
+                  value={marker.isCustomIcon}
+                  onValueChange={(v) => {
+                    setMarker({ ...marker, isCustomIcon: v })
+                  }} />
+              </View>
+            }
+
+            {isEdit && marker.isCustomIcon &&
+              <View style={styles.row}>
+                <Text>Select A Custom Icon</Text>
+                <Picker
+                  selectedValue={marker.iconId}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setMarker({ ...marker, iconId: itemValue })
+                  }>
+                  {map.customIcons.map(i => (
+                    <Picker.Item key={i._id} label={i.name} value={i._id} />
+                  ))}
+                </Picker>
+              </View>
+            }
+
+            {isEdit && !marker.isCustomIcon &&
+              <View style={styles.row}>
+                <Text>Select A Default Icon</Text>
+                <Picker
+                  selectedValue={marker.iconId}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setMarker({ ...marker, iconId: itemValue })
+                  }>
+                  {GetBuiltInIcons().map(i => (
+                    <Picker.Item key={i._id} label={i.name} value={i._id} />
+                  ))}
+                </Picker>
+              </View>
+            }
+
           </Dialog.Content>
           <Dialog.Actions>
-              <Button onPress={onDismiss}>Confirm</Button>
+            <Button onPress={onDismiss}>Confirm</Button>
             {isEdit &&
               <Button onPress={() => onDelete(marker)}>Delete</Button>}
           </Dialog.Actions>
@@ -66,3 +132,10 @@ export default function MarkerDetail({ visible,
     </Portal>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  }
+})
