@@ -5,6 +5,7 @@
 import React from "react";
 import { View, StyleSheet, Animated, Text, Image, TouchableOpacity, PanResponder } from "react-native";
 import Marker from '../../classes/marker';
+import GetBuiltInIcons from "../../data/built-in-icons";
 
 /**
  * Props: 
@@ -38,14 +39,14 @@ export default function MapViewMarker({ marker, map, posLayout, onPress }) {
         tempIcon = map.customIcons.find(i=>i._id == marker.iconId);
       }
       else {// build in icon
-        tempIcon = GetBuiltInIcons.find(i=>i._id == marker.iconId);
+        tempIcon = GetBuiltInIcons().find(i=>i._id == marker.iconId);
       }
     } catch (e) {
-      console.error(`Failed to set icon. ${e}`);
+      tempIcon = GetBuiltInIcons()[0];
+      return tempIcon;
     }
     if (!tempIcon) {
-      console.error(`Invalid marker icon`, tempIcon, marker);
-      return;
+      tempIcon = GetBuiltInIcons()[0];
     }
     return tempIcon;
   }
@@ -61,9 +62,8 @@ export default function MapViewMarker({ marker, map, posLayout, onPress }) {
       >        
         <Text
           style={styles.markerImage}>
-          {getIcon().image}
+          {getIcon()&&getIcon().image}
         </Text>
-
       </TouchableOpacity>
       {marker?.label != undefined &&
         <Text style={styles.label}>{marker?.label}</Text>

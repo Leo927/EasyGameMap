@@ -89,7 +89,7 @@ export default function MarkerDetail({ visible,
                 <Switch
                   value={marker.isCustomIcon}
                   onValueChange={(v) => {
-                    setMarker({ ...marker, isCustomIcon: v })
+                    setMarker({ ...marker, isCustomIcon: v });
                   }} />
               </View>
             }
@@ -103,7 +103,7 @@ export default function MarkerDetail({ visible,
                     setMarker({ ...marker, iconId: itemValue })
                   }>
                   {map.customIcons.map(i => (
-                    <Picker.Item key={i._id} label={i.name} value={i._id} />
+                    <Picker.Item key={i._id} label={i.image} value={i._id} />
                   ))}
                 </Picker>
               </View>
@@ -118,7 +118,7 @@ export default function MarkerDetail({ visible,
                     setMarker({ ...marker, iconId: itemValue })
                   }>
                   {GetBuiltInIcons().map(i => (
-                    <Picker.Item key={i._id} label={i.name} value={i._id} />
+                    <Picker.Item key={i._id} label={i.image} value={i._id} />
                   ))}
                 </Picker>
               </View>
@@ -140,5 +140,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    textAlign: 'center',
   }
 })

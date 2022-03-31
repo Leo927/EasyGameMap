@@ -71,7 +71,8 @@ export default function EgmMapView(props) {
       'Chili',
     ],
     customIcons: [
-      customIcon
+      customIcon,
+      Icon.create('cry', '😅')
     ],  
     markers: [
       {
@@ -79,8 +80,8 @@ export default function EgmMapView(props) {
         label: 'Smile',
         title: 'Smile Face',
         description: 'This is a simply smile face',
-        isCustomIcon: true,
-        iconId: customIcon._id,
+        isCustomIcon: false,
+        iconId: 'default',
         top: 100,
         left: 100,
         markerGroup: [
