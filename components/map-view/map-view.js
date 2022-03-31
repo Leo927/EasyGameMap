@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   },
   toolbox:{
     position: 'absolute',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 2,
     padding: 2,
     top: 100,

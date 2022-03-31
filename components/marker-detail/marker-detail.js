@@ -47,11 +47,13 @@ export default function MarkerDetail({ visible,
                 <TextInput
                   style={{ flex: 1 }}
                   label="Title"
+                  placeholder='Enter Title'
                   value={marker.title}
                   onChangeText={(t) => setMarker({ ...marker, title: t })}
                 />
                 <TextInput
                   label="Label"
+                  placeholder='Enter Icon.'                  
                   style={{ flex: 1 }}
                   value={marker.label}
                   onChangeText={(t) => setMarker({ ...marker, label: t })}
@@ -61,6 +63,7 @@ export default function MarkerDetail({ visible,
             {isEdit &&
               <TextInput
                 label="Description"
+                multiline={true}
                 value={marker.description}
                 onChangeText={(t) => setMarker({ ...marker, description: t })}
               />}
