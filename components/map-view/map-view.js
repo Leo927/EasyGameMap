@@ -132,7 +132,9 @@ export default function EgmMapView(props) {
    * @returns The position of the item on the map
    */
   function screenXYtoMapXY(screenXY) {
-    throw "Not implmeneted";
+    const mapX = (screenXY.x - mapPos.x)/mapZoom;
+    const mapY = (screenXY.y - mapPos.y)/mapZoom;
+    return { x: mapX, y: mapY }
   }
 
   /**
