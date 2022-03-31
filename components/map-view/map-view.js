@@ -5,13 +5,10 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Dimensions,
-  Image,
   PanResponder,
   Animated,
-  FlatList
 } from 'react-native';
-import { Portal, Text } from 'react-native-paper';
+import { Switch, Text } from 'react-native-paper';
 
 
 // used to generate new id
@@ -39,7 +36,9 @@ export default function EgmMapView(props) {
   const [editingMarker, setEditingMarker] = React.useState(null);
 
   // some functions are only avialble in edit mode
-  const [isEdit, setIsEdit] = React.useState(true);
+  const [isEdit, setIsEdit] = React.useState(false);
+
+  const [canEdit, setCanEdit] = React.useState(true);
 
   // left for potential dynamic swapping
   const iconSize = { x: 50, y: 50 }
@@ -221,7 +220,18 @@ export default function EgmMapView(props) {
         onPress={onMarkerPressed}
       />))}
 
-
+      {/* EditMode Toggle */}
+      {canEdit&&
+        <View 
+          style={styles.editModeToggle}>
+          
+          <Text style={{color:'white'}}>EditMode</Text>
+          <Switch
+            value={isEdit}
+            onValueChange={setIsEdit}
+          />
+        </View>
+      }
     </View>
   );
 
@@ -243,4 +253,11 @@ const styles = StyleSheet.create({
     height: '100%',
     borderWidth: 2
   },
+  editModeToggle:{
+    position: 'absolute',
+    flexDirection:'row',
+    alignItems:'center',
+    top: 20,
+    right: 20
+  }
 });

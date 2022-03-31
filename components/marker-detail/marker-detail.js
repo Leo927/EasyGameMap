@@ -36,7 +36,7 @@ export default function MarkerDetail({ visible,
             {marker.title}
           </Dialog.Title>
           <Dialog.Content>
-            {!isEdit && marker.description}
+            <Text> {!isEdit && marker.description}</Text>
             {isEdit &&
               <TextInput
                 label="Title"
