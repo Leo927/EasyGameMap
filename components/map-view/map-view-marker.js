@@ -81,5 +81,8 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
+    backgroundColor: 'rgba(20, 20, 20, 0.4)',
+    borderRadius: 2,
+    color: 'white',
   }
 })
