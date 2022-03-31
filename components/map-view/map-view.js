@@ -25,6 +25,9 @@ import Marker from '../../classes/marker';
 
 
 export default function EgmMapView(props) {
+  // get screen dimension
+  const [containerSize, setContainerSize] = React.useState({x:100, y:100});
+  
   // controls the position of the top left corner of the map 
   // from the top left corner of the parent
   const [mapPos, setMapPos] = React.useState({ x: 0, y: 0 });
@@ -174,7 +177,7 @@ export default function EgmMapView(props) {
       newMarker.top = mapRelativePos.y;
 
       currentMap.markers.push(newMarker);
-      return currentMap;
+      return {...currentMap};
     });
   }
 
@@ -220,7 +223,12 @@ export default function EgmMapView(props) {
   ,[editingMarker])
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}
+      onLayout={(e)=>{
+        // save component size
+        var {x,y,width, height} = e.nativeEvent.layout;
+        setContainerSize({x:width, y:height});
+      }}>
       {/* Map Container */}
 
       <Animated.Image
@@ -253,7 +261,7 @@ export default function EgmMapView(props) {
         <View 
           style={styles.editModeToggle}>
           
-          <Text style={{color:'white'}}>EditMode</Text>
+          <Text style={styles.onMapText}>EditMode</Text>
           <Switch
             value={isEdit}
             onValueChange={setIsEdit}
@@ -302,5 +310,11 @@ const styles = StyleSheet.create({
     padding: 2,
     top: 100,
     right: 20
+  },
+  onMapText:{
+    backgroundColor: 'rgba(20, 20, 20, 0.5)',
+    color: 'white',
+    padding:2,
+    borderRadius: 2,
   }
 });
