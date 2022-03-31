@@ -23,7 +23,7 @@ import Marker from '../../classes/marker';
 import Icon from '../../classes/icon';
 
 
-
+const customIcon = Icon.create('smile', '😀');
 
 export default function EgmMapView(props) {
   // get screen dimension
@@ -71,7 +71,7 @@ export default function EgmMapView(props) {
       'Chili',
     ],
     customIcons: [
-      Icon.create('star', 'starImage')
+      customIcon
     ],  
     markers: [
       {
@@ -80,7 +80,7 @@ export default function EgmMapView(props) {
         title: 'Smile Face',
         description: 'This is a simply smile face',
         isCustomIcon: true,
-        iconId: 'smile',
+        iconId: customIcon._id,
         top: 100,
         left: 100,
         markerGroup: [

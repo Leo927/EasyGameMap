@@ -35,10 +35,10 @@ export default function MapViewMarker({ marker, map, posLayout, onPress }) {
     var tempIcon;
     try {
       if (marker.isCustomIcon) {//custom icon
-        tempIcon = map.customIcons[marker.iconId];
+        tempIcon = map.customIcons.find(i=>i._id == marker.iconId);
       }
       else {// build in icon
-        tempIcon = GetBuiltInIcons()[marker.iconId];
+        tempIcon = GetBuiltInIcons.find(i=>i._id == marker.iconId);
       }
     } catch (e) {
       console.error(`Failed to set icon. ${e}`);
@@ -59,9 +59,10 @@ export default function MapViewMarker({ marker, map, posLayout, onPress }) {
       <TouchableOpacity
         onPress={()=>onPress(marker)}
       >        
-        <Image
-          style={styles.markerImage}
-          source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Full_Star_Yellow.svg/64px-Full_Star_Yellow.svg.png?20061109100643' }} />
+        <Text
+          style={styles.markerImage}>
+          {getIcon().image}
+        </Text>
 
       </TouchableOpacity>
       {marker?.label != undefined &&
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
   markerImage: {
     width: 50,
     height: 50,
+    fontSize: 35
   },
   label: {
     textAlign: 'center',
