@@ -1,14 +1,9 @@
 import * as React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import EGMContext from '../../context';
-import { Button, Text, Title, List } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
-
-import { updateMap, createMap } from '../../data/map';
 import { Map } from '../../classes/map';
 import { getMap } from '../../data/map';
 import MapConfigGeneral from './map-general';
@@ -21,87 +16,65 @@ export default function MapConfigStack() {
 
   const route = useRoute();
 
-  const context = React.useContext(EGMContext);
-
-  const [map, setMap] = React.useState(new Map());
+  const [map, setMap] = React.useState();
 
   // on start, set map id from route params
-  useFocusEffect(
-    React.useCallback(() => {
-      async function fetchMap() {
-        if (!route?.params?.mapId)
-          return;
-        const tempMap = await getMap(route.params.mapId);
-        if (!tempMap) {
-          setMap(new Map());
-          return;
-        }
-        setMap(tempMap);
-      }
-      fetchMap();
-    }, [route.params])
-  );
-
-  const onCreatePressed = async () => {
-    if (map._id) {
-      try {
-        const res = await updateMap(map._id, map, context.user);
-      } catch (e) {
-        console.error(e);
-      }
+  React.useEffect(async () => {
+    if (!route?.params?.mapId)
+      return;
+    const tempMap = await getMap(route.params.mapId);
+    if (!tempMap) {
+      tempMap = new Map();
+      return;
     }
-    else {
-      try {
-        const res = await createMap(map, context.user);
-        setMap((m) => ({ ...m, _id: res?.mapId }));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }
+    setMap(tempMap);
+  }, []);
 
   return (
-    <Tab.Navigator
-      barStyle={{
-        backgroundColor: "white"
-      }}
-    >
-      <Tab.Screen
-        name="general"
-        title="General"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
-          ),
+    <View style={{ flex: 1 }}>
+      {map != undefined &&
+        <Tab.Navigator
+          barStyle={{
+            backgroundColor: "white"
+          }}
+        >
+          <Tab.Screen
+            name="general"
+            title="General"
+            options={{
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="home" color={color} size={26} />
+              ),
 
-        }}>
-        {() => (<MapConfigGeneral map={map} setMap={setMap} />)}
-      </Tab.Screen>
+            }}>
+            {() => (<MapConfigGeneral map={map} setMap={setMap} />)}
+          </Tab.Screen>
 
-      <Tab.Screen
-        name="Underlay"
-        title="Underlay"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="image" color={color} size={26} />
-          ),
+          <Tab.Screen
+            name="Underlay"
+            title="Underlay"
+            options={{
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="image" color={color} size={26} />
+              ),
 
-        }}>
-        {() => (<MapConfigImage map={map} setMap={setMap} />)}
-      </Tab.Screen>
+            }}>
+            {() => (<MapConfigImage map={map} setMap={setMap} />)}
+          </Tab.Screen>
 
-      <Tab.Screen
-        name="Map"
-        title="Map"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="map" color={color} size={26} />
-          ),
+          <Tab.Screen
+            name="Map"
+            title="Map"
+            options={{
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="map" color={color} size={26} />
+              ),
 
-        }}>
-        {() => (<EgmMapView map={map} setMap={setMap} canEdit={true} />)}
-      </Tab.Screen>
-    </Tab.Navigator>
+            }}>
+            {() => (<EgmMapView map={map} setMap={setMap} canEdit={true} />)}
+          </Tab.Screen>
+        </Tab.Navigator>}
+    </View>
   );
 }
 
