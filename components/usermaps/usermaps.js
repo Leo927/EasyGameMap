@@ -44,7 +44,7 @@ export default function UserMaps({uid}){
             <Card.Title title={item.name}/>
             <Card.Actions>
                 <Button onPress={()=>navigation.navigate("MapConfigStack", {mapId: item._id})}>Config</Button>
-                <Button>Open</Button>
+                <Button onPress={()=>navigation.navigate("MapViewScreen", {mapId: item._id})}>Open</Button>
                 <Button onPress={()=>{
                     setDelVisible(true);
                     setDelTarget(item._id);
