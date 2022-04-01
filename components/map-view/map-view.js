@@ -133,6 +133,8 @@ export default function EgmMapView({map, setMap, canEdit}) {
    * <1> map is updated.
    */
   function createNewMarker(){
+    if(!setMap)
+      return;
     setMap(currentMap=>{
       const newMarker = new Marker();
       // get absolute screen center
@@ -163,6 +165,8 @@ export default function EgmMapView({map, setMap, canEdit}) {
    * <1> marker is removed from the map
    */
   function onMarkerDeleted(marker){
+    if(!setMap)
+      return;
     setMap(currentMap=>{
       const idx = currentMap.markers.findIndex(m => m._id == editingMarker._id);
       if(idx >= 0)
@@ -176,9 +180,10 @@ export default function EgmMapView({map, setMap, canEdit}) {
    * Merge the changes from editingMarker into the map
    */
   function mergeEditingMarker(){
-    if (!editingMarker) {
+    if (!editingMarker) 
       return;
-    }
+    if(!setMap)
+      return;
     setMap(currentMap=>{
       const idx = currentMap.markers.findIndex(m => m._id == editingMarker._id);
       if(idx < 0) 
