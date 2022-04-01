@@ -1,5 +1,7 @@
 import { Card, Button } from "react-native-paper";
+import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+
 function MapCard({ map, canEdit }) {
   const navigation = useNavigation();
   return (
@@ -22,6 +24,13 @@ function MapCard({ map, canEdit }) {
     </Card>
   );
 }
+
+const styles = StyleSheet.create({
+  mapCard:{
+    
+  }
+})
+
 MapCard.defaultProps ={
   canEdit : false
 }
