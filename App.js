@@ -11,6 +11,7 @@ import NavBar from './components/nav-bar/nav-bar';
 import HomeScreen from './components/home-screen/home-screen';
 import ProfileScreen from './components/profile-screen/profile-screen';
 import MapConfigStack from './components/map-config/map-config';
+import MapViewScreen from './components/map-view-screen/map-view-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,13 @@ const App = () => {
               }}
             />
 
+            <Stack.Screen
+              name="MapViewScreen"
+              component={MapViewScreen}
+              options={{
+                headerRight: ()=>(<NavBar/>),
+              }}
+            />
         </Stack.Navigator>
         </NavigationContainer>
       </Provider>
