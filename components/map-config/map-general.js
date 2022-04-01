@@ -27,16 +27,6 @@ export default function MapConfigGeneral({map, setMap}){
         }
     }
     return(
-        <View>
-            <View>
-                <TextInput
-                    label="Name"
-                    value={map.name}
-                    placeholder = "Enter name"
-                    error = {(value)=>!value.name}
-                    onChangeText = {(value)=>setMap((current)=>({...current, name:value}))}
-                />
-
                 <Button
                     style={styles.row}
                     mode={'outlined'}
@@ -44,11 +34,14 @@ export default function MapConfigGeneral({map, setMap}){
                     {map._id != "" ? "Update" : "Create"}
                 </Button>
 
-                
-                {map._id != "" &&
-                    <Button mode='outlined'>View Map</Button>
-                }
-            </View>
+        <View style={styles.container}>
+            <TextInput
+                label="Name"
+                value={map.name}
+                placeholder = "Enter name"
+                error = {!map.name}
+                onChangeText = {(value)=>setMap((current)=>({...current, name:value}))}
+            />
             <MapConfigMarker map={map} setMap={setMap}/>
         </View>
     );

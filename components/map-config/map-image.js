@@ -37,7 +37,7 @@ export default function MapConfigImage({ map, setMap }) {
               label="Width"
               value={map.width + ""}
               placeholder="Enter width"
-              error={(value) => isNaN(value)}
+              error={isNaN(map.width) || (map.width + "").length <= 0}
               onChangeText={(value) => setMap((current) => ({ ...current, width: value }))}
             >
             </TextInput>
@@ -46,7 +46,7 @@ export default function MapConfigImage({ map, setMap }) {
               label="Height"
               value={map.height + ""}
               placeholder="Enter height"
-              error={(value) => isNaN(value)}
+              error={isNaN(map.height) || (map.height + "").length <= 0}
               onChangeText={(value) => setMap((current) => ({ ...current, height: value }))}
             />
           </View>}
