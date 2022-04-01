@@ -5,7 +5,6 @@ import EGMContext from '../../context';
 import { Button, Text, Title, List } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import EgmMapView from '../map-view/map-view';
 
 
 
@@ -15,6 +14,7 @@ import { getMap } from '../../data/map';
 import MapConfigGeneral from './map-general';
 import MapConfigImage from './map-image';
 import MapConfigMarker from './map-marker';
+import EgmMapView from '../map-view/map-view';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -113,7 +113,7 @@ export default function MapConfigStack() {
           ),
 
         }}>
-        {() => (<EgmMapView map={map} setMap={setMap} />)}
+        {() => (<EgmMapView map={map} setMap={setMap} canEdit={true} />)}
       </Tab.Screen>
     </Tab.Navigator>
   );
