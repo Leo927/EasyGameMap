@@ -7,6 +7,7 @@ import {
   View,
   PanResponder,
   Animated,
+  Image,
 } from 'react-native';
 import { Button, Switch, Text } from 'react-native-paper';
 
@@ -204,9 +205,9 @@ export default function EgmMapView(props) {
       }}>
       {/* Map Container */}
 
-      <Animated.Image
+      <Image
         {...mapPan.panHandlers}
-        source={{ uri: map.Image }}
+        source={{ uri: `data:image/gif;base64,${map.image}` }}
         style={[
           { width: map.width * mapZoom, height: map.height * mapZoom },
           { left: mapPos.x, top: mapPos.y },
