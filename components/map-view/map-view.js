@@ -26,7 +26,7 @@ import Icon from '../../classes/icon';
 
 const customIcon = Icon.create('smile', '😀');
 
-export default function EgmMapView(props) {
+export default function EgmMapView({map, setMap, canEdit}) {
   // get screen dimension
   const [containerSize, setContainerSize] = React.useState({x:100, y:100});
   
@@ -44,8 +44,6 @@ export default function EgmMapView(props) {
 
   // some functions are only avialble in edit mode
   const [isEdit, setIsEdit] = React.useState(false);
-
-  const [canEdit, setCanEdit] = React.useState(true);
 
   // left for potential dynamic swapping
   const iconSize = { x: 50, y: 50 }
