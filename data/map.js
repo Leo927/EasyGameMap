@@ -106,3 +106,24 @@ export async function deleteMap(mapId, user){
         console.error("Failed to delete map. "+e);
     }
 }
+
+/**
+ * Get all public maps from server. 
+ * 
+ * Return: 
+ * An array of maps. Each contains only the minimum data to identify the map
+ */
+export async function getMaps(){
+  try{
+    const response = await fetch(endPoint);
+    const responseJson = await response.json();
+    if(responseJson.length <= 0)
+        return null;
+    return responseJson;
+  }
+  catch(e){
+      console.error(`Failed to fetch all public map listings. `);
+      return null;
+  }
+}
+
