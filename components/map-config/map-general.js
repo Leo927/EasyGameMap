@@ -4,6 +4,8 @@ import EGMContext from '../../context';
 import { TextInput, HelperText, Button, Text, Title, List } from 'react-native-paper';
 import { createMap, updateMap } from '../../data/map';
 
+import MapConfigMarker from './map-marker';
+
 export default function MapConfigGeneral({map, setMap}){
     const context = React.useContext(EGMContext);
 
@@ -25,7 +27,7 @@ export default function MapConfigGeneral({map, setMap}){
         }
     }
     return(
-        <View style={styles.container}>
+        <View>
             <View>
                 <TextInput
                     label="Name"
@@ -47,6 +49,7 @@ export default function MapConfigGeneral({map, setMap}){
                     <Button mode='outlined'>View Map</Button>
                 }
             </View>
+            <MapConfigMarker map={map} setMap={setMap}/>
         </View>
     );
 }

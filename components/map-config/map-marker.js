@@ -151,7 +151,7 @@ export default function MapConfigMarker({ map, setMap }) {
   )};
 
   return (
-    <View style={styles.container}>
+    <View>
 
       {/* Add marker group dialogue box */}
       <Portal>

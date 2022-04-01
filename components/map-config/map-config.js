@@ -13,7 +13,6 @@ import { Map } from '../../classes/map';
 import { getMap } from '../../data/map';
 import MapConfigGeneral from './map-general';
 import MapConfigImage from './map-image';
-import MapConfigMarker from './map-marker';
 import EgmMapView from '../map-view/map-view';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -89,19 +88,6 @@ export default function MapConfigStack() {
 
         }}>
         {() => (<MapConfigImage map={map} setMap={setMap} />)}
-      </Tab.Screen>
-
-      <Tab.Screen
-        name="Markers"
-        title="Markers"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="map-marker" color={color} size={26} />
-          ),
-
-        }}>
-        {() => (<MapConfigMarker map={map} setMap={setMap} />)}
-
       </Tab.Screen>
 
       <Tab.Screen
