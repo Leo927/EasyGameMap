@@ -12,6 +12,13 @@ import EgmMapView from '../map-view/map-view';
 
 const Tab = createMaterialBottomTabNavigator();
 
+/**
+ * Implment a tabbed map config screen. 
+ * 
+ * Takes a route param: mapId
+ * 
+ * If mapId is undefined. The component will create a new item. 
+ */
 export default function MapConfigStack() {
 
   const route = useRoute();
