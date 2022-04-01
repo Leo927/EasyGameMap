@@ -3,9 +3,9 @@
  */
 
 import React from 'react';
-import { StyleSheet, View, Picker } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Dialog, Text, Button, TextInput, Portal, Switch } from 'react-native-paper';
-
+import {Picker} from '@react-native-picker/picker';
 import GetBuiltInIcons from '../../data/built-in-icons';
 
 /**
@@ -29,6 +29,7 @@ export default function MarkerDetail({ visible,
   onDelete,
   isEdit,
   map }) {
+
   return (
     <Portal>
       {marker &&
@@ -103,7 +104,7 @@ export default function MarkerDetail({ visible,
                     setMarker({ ...marker, iconId: itemValue })
                   }>
                   {map.customIcons.map(i => (
-                    <Picker.Item key={i._id} label={i.image} value={i._id} />
+                    <Picker.Item key={i._id} label={i.name} value={i._id} />
                   ))}
                 </Picker>
               </View>
@@ -118,7 +119,7 @@ export default function MarkerDetail({ visible,
                     setMarker({ ...marker, iconId: itemValue })
                   }>
                   {GetBuiltInIcons().map(i => (
-                    <Picker.Item key={i._id} label={i.image} value={i._id} />
+                    <Picker.Item key={i._id} label={i.name} value={i._id} />
                   ))}
                 </Picker>
               </View>
