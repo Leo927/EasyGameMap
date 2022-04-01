@@ -20,11 +20,14 @@ export default function MapConfigStack() {
 
   // on start, set map id from route params
   React.useEffect(async () => {
-    if (!route?.params?.mapId)
-      return;
-    const tempMap = await getMap(route.params.mapId);
-    if (!tempMap) {
+    var tempMap;
+    if (!route?.params?.mapId){
       tempMap = new Map();
+    }else{
+      tempMap = await getMap(route.params.mapId);
+    }
+    if (!tempMap) {
+      console.error("Failed to create new map");
       return;
     }
     setMap(tempMap);
