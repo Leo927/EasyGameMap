@@ -8,7 +8,7 @@ function MapCard({ map, canEdit }) {
     <Card style={styles.mapCard}>
       <Card.Title title={map?.name?map.name: "INVALID"} />
       <Card.Actions>
-        <Button>Open</Button>
+        <Button onPress={()=>navigation.navigate("MapViewScreen", {mapId: map._id})}>Open</Button>
 
         {canEdit && map?._id != undefined &&
           <Button onPress={() => navigation.navigate("MapConfigStack", { mapId: map._id })}>Edit</Button>}
@@ -34,3 +34,5 @@ const styles = StyleSheet.create({
 MapCard.defaultProps ={
   canEdit : false
 }
+
+export default MapCard;
