@@ -59,39 +59,7 @@ export default function EgmMapView(props) {
       }));
     }
   })
-
-  const [map, setMap] = React.useState({
-    Image: 'https://www.powerpyx.com/wp-content/uploads/elden-ring-full-world-map.jpg',
-    name: "Elden Ring",
-    width: 1920,
-    height: 1080,
-    markerGroups: [
-      'Apple',
-      'Potato',
-      'Chili',
-    ],
-    customIcons: [
-      customIcon,
-      Icon.create('cry', '😅')
-    ],  
-    markers: [
-      {
-        _id: uuid.v4(),
-        label: 'Smile',
-        title: 'Smile Face',
-        description: 'This is a simply smile face',
-        isCustomIcon: false,
-        iconId: 'default',
-        top: 100,
-        left: 100,
-        markerGroup: [
-          'Potato'
-        ]
-      }
-    ]
-  });
-
-
+  
   /**
    * Returns the absolute position of a marker according to 
    * position of map, zoom, and marker pos.
