@@ -72,13 +72,13 @@ export default function MarkerDetail({ visible,
                 <TextInput
                   style={{ flex: 1 }}
                   label="x"
-                  value={marker.left}
+                  value={marker.left.toString()}
                   onChangeText={(t) => setMarker({ ...marker, left: t })}
                 />
                 <TextInput
                   style={{ flex: 1 }}
                   label="y"
-                  value={marker.top}
+                  value={marker.top.toString()}
                   onChangeText={(t) => setMarker({ ...marker, top: t })}
                 />
               </View>}
