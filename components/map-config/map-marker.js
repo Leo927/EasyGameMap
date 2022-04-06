@@ -135,9 +135,21 @@ export default function MapConfigMarker({ map, setMap }) {
     </Card>
   );
 
+  /**
+   * Returns a card representing the icon.
+   * Props: 
+   *  item: the icon
+   *  index: the index of the icon in the list.
+   */
   const renderIconCard = ({item, index})=>{
     return (<Card>
       <Card.Title title={item.name}/>
+      <Card.Content>
+        {/* Show the image */}
+        <Image 
+          style={styles.iconImage}
+          source={{ uri: `data:image/gif;base64,${item.image}` }}/>
+      </Card.Content>
       <Card.Actions>
         <Button onPress={()=>{
           setEditingIcon(item);
@@ -182,7 +194,7 @@ export default function MapConfigMarker({ map, setMap }) {
         onPress={()=>setAddGroupDiagVisible(true)}
         >Add Marker Group</Button>
 
-      {/* Render diaglogue boxes */}
+      {/* Display all markers groups*/}
       <FlatList
         data={map.markerGroups}
         extraData={map}
@@ -190,14 +202,18 @@ export default function MapConfigMarker({ map, setMap }) {
         renderItem={renderMarkerGroup}
       ></FlatList>
 
+      {/* IconDetail Dialog  */}
       <IconDetail visible={iconDiagVisible}
         setVisible={setIconDiagVisible}
         icon={editingIcon}
         setIcon={setEditingIcon}
         onConfirm={onIconEditConfirmed}
         onCancel={onIconEditCancelled}/>
+
+      {/* Button To add new icon */}
       <Button mode='outlined' onPress={onAddCustIconButtonClicked}>Add Custom Icon</Button>
 
+      {/* Display all custom icons */}
       <FlatList
         data={map.customIcons}
         extraData={map}
@@ -214,4 +230,9 @@ const styles = StyleSheet.create({
     marginRight: "10%",
     marginTop: 20,
   },
+
+  iconImage:{
+    width:30,
+    height:30,
+  }
 });
