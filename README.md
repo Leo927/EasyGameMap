@@ -1,5 +1,9 @@
 # EasyGameMap
+This project implements a native app that simplifies creating interactive game maps. 
 
+This repository is the front end of the app.
+
+Users can view, create, modify interactive maps. 
 ## Setup
 1. Clone the repository ```git clone https://github.com/Leo927/EasyGameMap.git```
 1. Install [NodeJS](https://nodejs.org/en/download/).
@@ -89,9 +93,10 @@ To delete a custom icon, press the DELETE button on the icon card. Note that all
 
 
 ## TODOs
-
 1. Refactor MapConfigMarker. Extract the icon card and marker card into their own components.
-
 1. Make custom icon list update immediately
-
 1. Add more login methods. 
+1. Searching map by name, user name.
+1. Searching markers in a map
+1. Marker Group Toggling
+1. Map Context Menu
