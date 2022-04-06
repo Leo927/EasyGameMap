@@ -100,10 +100,13 @@ export async function deleteMap(mapId, user) {
         mapId: mapId,
       })
     });
+    if(!response.ok)
+      throw "Bad response. " + response.status ;
     return response.json();
   }
   catch (e) {
     console.error("Failed to delete map. " + e);
+    return {deletedCount: 0};
   }
 }
 
