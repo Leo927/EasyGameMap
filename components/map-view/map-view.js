@@ -143,9 +143,11 @@ export default function EgmMapView({map, setMap, canEdit}) {
       // convert to map relative position
       const mapRelativePos = screenXYtoMapXY(centerOfScreen);
 
-      newMarker.left = mapRelativePos.x;
+      // keep one decimal
+      newMarker.left = Math.round(mapRelativePos.x * 10)/10;
 
-      newMarker.top = mapRelativePos.y;
+      // keeps one decimal
+      newMarker.top = Math.round(mapRelativePos.y * 10)/10;
 
       setEditingMarker(newMarker);
       setMarkerDetailVisible(true);
