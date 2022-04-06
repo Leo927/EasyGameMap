@@ -53,22 +53,31 @@ export default function MapConfigMarker({ map, setMap }) {
   // invoked when icon detail dialogue is confirmed. 
   const onIconEditConfirmed = async ()=>{
     try{ 
+      // name must be non empty
+      if(editingIcon.name.length <=0)
+        return;
+      // image must not be empty
+      if(editingIcon.image.length <=0)
+        return;
+
+      // get all icons with the same name
+      const iconsWithSameName = map.customIcons.filter(i=>i.name == editingIcon.name);
+
+      // check whether creating new icon or editing existing icon
       const foundId = map.customIcons.findIndex(i=>i._id == editingIcon._id);     
       if(foundId <0){//create new icon
         // check duplicate name
-        const sameNames = map.customIcons.filter(i=>i.name == editingIcon.name);
-        if(sameNames.length > 0)
+        if(iconsWithSameName.length > 0)
           return;
         const id = uuid.v1();
         editingIcon._id = id;
         map.customIcons.push(editingIcon);
-        console.log(map.customIcons, editingIcon);
         setIconDiagVisible(false);
       }
       else{//edit existing icon
-        // check duplicate name
-        const sameNames = map.customIcons.filter(i=>i.name == editingIcon.name);
-        if(sameNames.length > 1)
+        // check duplicate name, allows up to 1 duplicate. Since it 
+        // is editing the current icon. the 1 duplicate is itself.
+        if(iconsWithSameName.length > 1)
           return;
         var copy = map.customIcons;
         copy[foundId] = editingIcon;
