@@ -26,10 +26,10 @@ import Icon from '../../classes/icon';
 
 const customIcon = Icon.create('smile', '😀');
 
-export default function EgmMapView({map, setMap, canEdit}) {
+export default function EgmMapView({ map, setMap, canEdit }) {
   // get screen dimension
-  const [containerSize, setContainerSize] = React.useState({x:100, y:100});
-  
+  const [containerSize, setContainerSize] = React.useState({ x: 100, y: 100 });
+
   // controls the position of the top left corner of the map 
   // from the top left corner of the parent
   const [mapPos, setMapPos] = React.useState({ x: 0, y: 0 });
@@ -58,7 +58,7 @@ export default function EgmMapView({map, setMap, canEdit}) {
       }));
     }
   })
-  
+
   /**
    * Returns the absolute position of a marker according to 
    * position of map, zoom, and marker pos.
@@ -105,8 +105,8 @@ export default function EgmMapView({map, setMap, canEdit}) {
    * @returns The position of the item on the map
    */
   function screenXYtoMapXY(screenXY) {
-    const mapX = (screenXY.x - mapPos.x)/mapZoom;
-    const mapY = (screenXY.y - mapPos.y)/mapZoom;
+    const mapX = (screenXY.x - mapPos.x) / mapZoom;
+    const mapY = (screenXY.y - mapPos.y) / mapZoom;
     return { x: mapX, y: mapY }
   }
 
@@ -132,28 +132,28 @@ export default function EgmMapView({map, setMap, canEdit}) {
    * SideEffects:
    * <1> map is updated.
    */
-  function createNewMarker(){
-    if(!setMap)
+  function createNewMarker() {
+    if (!setMap)
       return;
-    setMap(currentMap=>{
+    setMap(currentMap => {
       const newMarker = new Marker();
       // get absolute screen center
-      const centerOfScreen = {x:containerSize.x/2, y: containerSize.y/2};
+      const centerOfScreen = { x: containerSize.x / 2, y: containerSize.y / 2 };
 
       // convert to map relative position
       const mapRelativePos = screenXYtoMapXY(centerOfScreen);
 
       // keep one decimal
-      newMarker.left = Math.round(mapRelativePos.x * 10)/10;
+      newMarker.left = Math.round(mapRelativePos.x * 10) / 10;
 
       // keeps one decimal
-      newMarker.top = Math.round(mapRelativePos.y * 10)/10;
+      newMarker.top = Math.round(mapRelativePos.y * 10) / 10;
 
       setEditingMarker(newMarker);
       setMarkerDetailVisible(true);
 
       currentMap.markers.push(newMarker);
-      return {...currentMap};
+      return { ...currentMap };
     });
   }
 
@@ -166,12 +166,12 @@ export default function EgmMapView({map, setMap, canEdit}) {
    * Side Effects:
    * <1> marker is removed from the map
    */
-  function onMarkerDeleted(marker){
-    if(!setMap)
+  function onMarkerDeleted(marker) {
+    if (!setMap)
       return;
-    setMap(currentMap=>{
+    setMap(currentMap => {
       const idx = currentMap.markers.findIndex(m => m._id == editingMarker._id);
-      if(idx >= 0)
+      if (idx >= 0)
         currentMap.markers.splice(idx, 1);
       return currentMap;
     });
@@ -181,14 +181,14 @@ export default function EgmMapView({map, setMap, canEdit}) {
   /**
    * Merge the changes from editingMarker into the map
    */
-  function mergeEditingMarker(){
-    if (!editingMarker) 
+  function mergeEditingMarker() {
+    if (!editingMarker)
       return;
-    if(!setMap)
+    if (!setMap)
       return;
-    setMap(currentMap=>{
+    setMap(currentMap => {
       const idx = currentMap.markers.findIndex(m => m._id == editingMarker._id);
-      if(idx < 0) 
+      if (idx < 0)
         return currentMap;
       currentMap.markers.splice(idx, 1);
       currentMap.markers.push(editingMarker);
@@ -196,17 +196,17 @@ export default function EgmMapView({map, setMap, canEdit}) {
     });
   }
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     mergeEditingMarker();
   }
-  ,[editingMarker])
+    , [editingMarker])
 
   return (
     <View style={styles.container}
-      onLayout={(e)=>{
+      onLayout={(e) => {
         // save component size
-        var {x,y,width, height} = e.nativeEvent.layout;
-        setContainerSize({x:width, y:height});
+        var { x, y, width, height } = e.nativeEvent.layout;
+        setContainerSize({ x: width, y: height });
       }}>
       {/* Map Container */}
 
@@ -223,10 +223,10 @@ export default function EgmMapView({map, setMap, canEdit}) {
         setVisible={setMarkerDetailVisible}
         marker={editingMarker}
         setMarker={setEditingMarker}
-        onDismiss={()=>setMarkerDetailVisible(false)}
-        onDelete = {onMarkerDeleted}
-        isEdit = {isEdit}
-        map = {map}
+        onDismiss={() => setMarkerDetailVisible(false)}
+        onDelete={onMarkerDeleted}
+        isEdit={isEdit}
+        map={map}
       />
       {map.markers.map(m => (<MapViewMarker
         key={m._id}
@@ -237,10 +237,10 @@ export default function EgmMapView({map, setMap, canEdit}) {
       />))}
 
       {/* EditMode Toggle */}
-      {canEdit&&
-        <View 
+      {canEdit &&
+        <View
           style={styles.editModeToggle}>
-          
+
           <Text style={styles.onMapText}>EditMode</Text>
           <Switch
             value={isEdit}
@@ -250,7 +250,7 @@ export default function EgmMapView({map, setMap, canEdit}) {
       }
 
       {/* ToolBox */}
-      {isEdit&&
+      {isEdit &&
         <View style={styles.toolbox}>
           <Button mode='outlined' onPress={createNewMarker}>New Marker</Button>
         </View>
@@ -276,14 +276,14 @@ const styles = StyleSheet.create({
     height: '100%',
     borderWidth: 2
   },
-  editModeToggle:{
+  editModeToggle: {
     position: 'absolute',
-    flexDirection:'row',
-    alignItems:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     top: 20,
     right: 20
   },
-  toolbox:{
+  toolbox: {
     position: 'absolute',
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 2,
@@ -291,10 +291,10 @@ const styles = StyleSheet.create({
     top: 100,
     right: 20
   },
-  onMapText:{
+  onMapText: {
     backgroundColor: 'rgba(20, 20, 20, 0.5)',
     color: 'white',
-    padding:2,
+    padding: 2,
     borderRadius: 2,
   }
 });
