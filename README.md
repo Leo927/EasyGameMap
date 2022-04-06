@@ -4,14 +4,17 @@ This project implements a native app that simplifies creating interactive game m
 This repository is the front end of the app.
 
 Users can view, create, modify interactive maps. 
-## Setup
+
+## Download Published Builds
+* Web: TBD
+* Android: [https://expo.dev/@leo347/EasyGameMap?serviceType=classic&distribution=expo-go](https://expo.dev/@leo347/EasyGameMap?serviceType=classic&distribution=expo-go)
+* IOS: [https://expo.dev/@leo347/EasyGameMap?serviceType=classic&distribution=expo-go](https://expo.dev/@leo347/EasyGameMap?serviceType=classic&distribution=expo-go)
+
+## Building
 1. Clone the repository ```git clone https://github.com/Leo927/EasyGameMap.git```
 1. Install [NodeJS](https://nodejs.org/en/download/).
 1. Install expo cli with ```npm install --global expo-cli```
 1. Install depdencies. ```npm install .```
-
-
-## Building
 1. Build with ```expo buil:```. See more [detail](https://docs.expo.dev/workflow/expo-cli/).
 
 ## Data Classes
@@ -100,3 +103,6 @@ To delete a custom icon, press the DELETE button on the icon card. Note that all
 1. Searching markers in a map
 1. Marker Group Toggling
 1. Map Context Menu
+1. Dragging markers on a map to change marker coordinate.
+1. Zooming in/out of map
+1. 
