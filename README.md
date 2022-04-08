@@ -1,9 +1,27 @@
 # EasyGameMap
-This project implements a native app that simplifies creating interactive game maps. 
+This project implements a react native app that simplifies creating interactive game maps. 
+Users can use the app to view, create or modify interactive maps. 
 
 This repository is the front end of the app.
 
-Users can view, create, modify interactive maps. 
+The backend can be found at [https://github.com/Leo927/EGMServer](https://github.com/Leo927/EGMServer).
+
+## Preview
+<img src="readme/resources/home.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
+<img src="readme/resources/map.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
+## Supported Platforms:
+
+|Platforms| Planned| Tested |
+----------|-----------|--|
+|Web|✔|❌|
+|Android|✔|✔|
+|IOS|✔|❌|
 
 ## Download Published Builds
 * Web: TBD
@@ -11,51 +29,38 @@ Users can view, create, modify interactive maps.
 * IOS: [https://expo.dev/@leo347/EasyGameMap?serviceType=classic&distribution=expo-go](https://expo.dev/@leo347/EasyGameMap?serviceType=classic&distribution=expo-go)
 
 ## Building
-1. Clone the repository ```git clone https://github.com/Leo927/EasyGameMap.git```
 1. Install [NodeJS](https://nodejs.org/en/download/).
-1. Install expo cli with ```npm install --global expo-cli```
-1. Install depdencies. ```npm install .```
-1. Build with ```expo buil:```. See more [detail](https://docs.expo.dev/workflow/expo-cli/).
+2. Install expo cli. See more [here](https://docs.expo.dev/workflow/expo-cli/)
+   
+        npm install --global expo-cli
 
-## Data Classes
-### Map
-Map has the following properties.
+3. Clone the repository 
 
-```javascript
-_id: unique map id assigned by database,
-name: name of the map. Cannot be empty. 
-image: picture asset of the map. stored as a string
-uid: uid of the user owning the map. Cannot be empty. 
-width: Number representing the width of the map. Can be empty. Must be a number.
-height: Number representing the height of the map. Can be empty. Must be a number.
-markerGroups: set[str] representing the names of each markerGroups. each name must be unique. Can be empty. 
-customIcons: dictionary[str, picture asset] representing a custom icon. 
-markers: list of markers. format: list[marker]. May be empty or undefined. 
-```
+        git clone https://github.com/Leo927/EasyGameMap.git
 
-### Marker:
-```javascript
-id: uid of the marker,
-title: String. Title of marker. Shown in the popup modal as title.
-description: String. Detailed description of the marker.
-label: String shown underneath the icon.
-isCustomIcon: Bool. If true, the icon used will be from the customIcons. Other wise, the icon id points to a default icon. 
-iconId: String representing the id of the icon. See isCustomIcon for more detail of where it comes from. 
-left: number representing the distance of the center of icon from the left edge of the map. 
-top: number representing the distance of the center of the icon from the top of the map. 
-markerGroup: A list of strings pointing to several markerGroups from the map. 
-```
-
-### Icon:
-this._id: string. Unique identifier to the icon.
-this.name: string. Name of the icon. Must be unique within the same map;
-this.image: string representation of the image. Supported format is gif, png, and jpg;
+4. Change directory
+  
+        cd EasyGameMap
+1. Install depdencies. 
+   
+        npm install .
+2. Build for targeted platform. See more [detail](https://docs.expo.dev/workflow/expo-cli/).
+  
+        expo build:<platform>
 
 ## Login
 To login, the user can press the purple circle on the top right corner. 
 
+<img src="readme/resources/home - login.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
 A dialog will show up. Press the LOGIN button on the dialog. Then the user will be guided to login to github and authorize the app. 
 Follow Github's instruction and login. Once authorized, the user is logged in. 
+
+<img src="readme/resources/guest user menu.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
 
 Currently the only supported login method is Github. 
 
@@ -95,14 +100,52 @@ display the edit dialog for the icon.
 To delete a custom icon, press the DELETE button on the icon card. Note that all markers on the map currently using this icon will switch to using built-in default icon.
 
 
-## TODOs
-1. Refactor MapConfigMarker. Extract the icon card and marker card into their own components.
-1. Make custom icon list update immediately
-1. Add more login methods. 
-1. Searching map by name, user name.
-1. Searching markers in a map
-1. Marker Group Toggling
-1. Map Context Menu
-1. Dragging markers on a map to change marker coordinate.
-1. Zooming in/out of map
-1. 
+## Data Classes
+### Map
+Map has the following properties.
+
+```javascript
+_id: unique map id assigned by database,
+name: name of the map. Cannot be empty. 
+image: picture asset of the map. stored as a string
+uid: uid of the user owning the map. Cannot be empty. 
+width: Number representing the width of the map. Can be empty. Must be a number.
+height: Number representing the height of the map. Can be empty. Must be a number.
+markerGroups: set[str] representing the names of each markerGroups. each name must be unique. Can be empty. 
+customIcons: dictionary[str, picture asset] representing a custom icon. 
+markers: list of markers. format: list[marker]. May be empty or undefined. 
+```
+
+### Marker:
+```javascript
+id: uid of the marker,
+title: String. Title of marker. Shown in the popup modal as title.
+description: String. Detailed description of the marker.
+label: String shown underneath the icon.
+isCustomIcon: Bool. If true, the icon used will be from the customIcons. Other wise, the icon id points to a default icon. 
+iconId: String representing the id of the icon. See isCustomIcon for more detail of where it comes from. 
+left: number representing the distance of the center of icon from the left edge of the map. 
+top: number representing the distance of the center of the icon from the top of the map. 
+markerGroup: A list of strings pointing to several markerGroups from the map. 
+```
+
+### Icon:
+```javascript
+_id: string. Unique identifier to the icon.
+name: string. Name of the icon. Must be unique within the same map;
+image: string representation of the image. Supported format is gif, png, and jpg;
+```
+
+## Todos
+* Refactor MapConfigMarker. Extract the icon card and marker card into their own components.  
+* Make custom icon list update immediately
+* Add more login methods. 
+* Searching map by name, user name.
+* Searching markers in a map
+* Marker Group Toggling
+* Map Context Menu
+* Dragging markers on a map to change marker coordinate.
+* Zooming in/out of map
+
+
+
