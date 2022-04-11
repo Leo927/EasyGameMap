@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { View, Image, StyleSheet, FlatList } from 'react-native';
-import { Button, Text, Dialog, Portal, TextInput, HelperText, Card, Title} from 'react-native-paper';
+import { Button, Text, Dialog, Portal, TextInput, HelperText, Card, Title } from 'react-native-paper';
 
 import IconDetail from '../icon-detail/icon-detail';
 import Icon from '../../classes/icon';
 import uuid from 'react-native-uuid';
 
+/**
+ * A page used to configure the marker related things.
+ * @prop
+ * <1> map: Map class 
+ * <2> setMap: setter to the map
+ */
 export default function MapConfigMarker({ map, setMap }) {
   const [addGroupDiagVisible, setAddGroupDiagVisible] = React.useState(false);
 
@@ -16,26 +22,26 @@ export default function MapConfigMarker({ map, setMap }) {
   const [editingIcon, setEditingIcon] = React.useState(new Icon());
 
   // usd for displaying error msg when adding new marker group. 
-  const [errMsg, setErrMsg]  = React.useState("");
-  
+  const [errMsg, setErrMsg] = React.useState("");
+
   // used for displying icon detail modal.
   const [iconDiagVisible, setIconDiagVisible] = React.useState(false);
 
-  const onAddGroupDismissed = ()=>{
+  const onAddGroupDismissed = () => {
     setNewGroupName("");
     setNewGroupStarted(false);
     setAddGroupDiagVisible(false);
   };
 
-  const checkNewGroupName =()=>{
-    if(newGroupName.length > 0)
+  const checkNewGroupName = () => {
+    if (newGroupName.length > 0)
       setNewGroupStarted(true);
-    if(map.markerGroups.includes(newGroupName)){
+    if (map.markerGroups.includes(newGroupName)) {
       setErrMsg("Duplicate group name is not allowed");
       return false;
     }
-    
-    if(!newGroupName){
+
+    if (!newGroupName) {
       setErrMsg("Must not be empty");
       return false;
     }
@@ -45,81 +51,81 @@ export default function MapConfigMarker({ map, setMap }) {
   }
 
   // invoked when Add Custom Icon Button is hit
-  const onAddCustIconButtonClicked = ()=>{
+  const onAddCustIconButtonClicked = () => {
     setEditingIcon(new Icon());
     setIconDiagVisible(true);
   }
 
   // invoked when icon detail dialogue is confirmed. 
-  const onIconEditConfirmed = async ()=>{
-    try{ 
+  const onIconEditConfirmed = async () => {
+    try {
       // name must be non empty
-      if(editingIcon.name.length <=0)
+      if (editingIcon.name.length <= 0)
         return;
       // image must not be empty
-      if(editingIcon.image.length <=0)
+      if (editingIcon.image.length <= 0)
         return;
 
       // get all icons with the same name
-      const iconsWithSameName = map.customIcons.filter(i=>i.name == editingIcon.name);
+      const iconsWithSameName = map.customIcons.filter(i => i.name == editingIcon.name);
 
       // check whether creating new icon or editing existing icon
-      const foundId = map.customIcons.findIndex(i=>i._id == editingIcon._id);     
-      if(foundId <0){//create new icon
+      const foundId = map.customIcons.findIndex(i => i._id == editingIcon._id);
+      if (foundId < 0) {//create new icon
         // check duplicate name
-        if(iconsWithSameName.length > 0)
+        if (iconsWithSameName.length > 0)
           return;
         const id = uuid.v1();
         editingIcon._id = id;
         map.customIcons.push(editingIcon);
         setIconDiagVisible(false);
       }
-      else{//edit existing icon
+      else {//edit existing icon
         // check duplicate name, allows up to 1 duplicate. Since it 
         // is editing the current icon. the 1 duplicate is itself.
-        if(iconsWithSameName.length > 1)
+        if (iconsWithSameName.length > 1)
           return;
         var copy = map.customIcons;
         copy[foundId] = editingIcon;
-        setMap({...map, customIcons:copy});
+        setMap({ ...map, customIcons: copy });
         setIconDiagVisible(false);
       }
-    }catch(e){
+    } catch (e) {
       console.error(`Failed to edit icon. ${e}`);
     }
   }
 
   // invoked when icon detail dialogue is cancelled. 
-  const onIconEditCancelled = ()=>{
+  const onIconEditCancelled = () => {
     setIconDiagVisible(false);
   }
 
   // check the group name for error
-  React.useEffect(()=>{
+  React.useEffect(() => {
     checkNewGroupName();
-  },[newGroupName])
+  }, [newGroupName])
 
   /**
    * Handles adding a new group to the marker groups of the map
    */
-  const onAddGroup = ()=>{
-    try{
-      if(!map || !setMap)
+  const onAddGroup = () => {
+    try {
+      if (!map || !setMap)
         throw "Map or setMap not defined"
       // init marker groups if not already exists
-      if(!map.markerGroups)
-        setMap({...map, markerGroups:[]})
+      if (!map.markerGroups)
+        setMap({ ...map, markerGroups: [] })
 
-      if(!Array.isArray(map.markerGroups))
+      if (!Array.isArray(map.markerGroups))
         throw "Invalid markerGroups type. Expected Array";
 
-      if(!checkNewGroupName())
+      if (!checkNewGroupName())
         return;
-      
+
       setNewGroupStarted(false);
       setNewGroupName("");
       map.markerGroups.push(newGroupName);
-    }catch(e){
+    } catch (e) {
       console.error(`Failed to create marker group. ${e}`);
     }
     setAddGroupDiagVisible(false);
@@ -132,14 +138,14 @@ export default function MapConfigMarker({ map, setMap }) {
    * Returns:
    * JSX element.
    */
-  const renderMarkerGroup = ({item, index})=>(
+  const renderMarkerGroup = ({ item, index }) => (
     <Card>
-      <Card.Title title={item}/>
+      <Card.Title title={item} />
       <Card.Actions>
         <Button>Edit</Button>
-        <Button onPress={()=>{          
+        <Button onPress={() => {
           map.markerGroups.splice(index, 1);
-          }}>Delete</Button>
+        }}>Delete</Button>
       </Card.Actions>
     </Card>
   );
@@ -150,26 +156,27 @@ export default function MapConfigMarker({ map, setMap }) {
    *  item: the icon
    *  index: the index of the icon in the list.
    */
-  const renderIconCard = ({item, index})=>{
+  const renderIconCard = ({ item, index }) => {
     return (<Card>
-      <Card.Title title={item.name}/>
+      <Card.Title title={item.name} />
       <Card.Content>
         {/* Show the image */}
-        <Image 
+        <Image
           style={styles.iconImage}
-          source={{ uri: `data:image/gif;base64,${item.image}` }}/>
+          source={{ uri: `data:image/gif;base64,${item.image}` }} />
       </Card.Content>
       <Card.Actions>
-        <Button onPress={()=>{
+        <Button onPress={() => {
           setEditingIcon(item);
           setIconDiagVisible(true);
         }}>Edit</Button>
-        <Button onPress={()=>{          
+        <Button onPress={() => {
           map.customIcons.splice(index, 1);
-          }}>Delete</Button>
+        }}>Delete</Button>
       </Card.Actions>
     </Card>
-  )};
+    )
+  };
 
   return (
     <View>
@@ -185,29 +192,29 @@ export default function MapConfigMarker({ map, setMap }) {
               error={!newGroupName && newGroupStarted}
               onChangeText={setNewGroupName}>
             </TextInput>
-            <HelperText type='error' visible={newGroupStarted && errMsg.length>0}>
+            <HelperText type='error' visible={newGroupStarted && errMsg.length > 0}>
               {errMsg}
             </HelperText>
-            
+
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={onAddGroup}>Add</Button>
-            <Button onPress={()=>setAddGroupDiagVisible(false)}>Cancel</Button>
+            <Button onPress={() => setAddGroupDiagVisible(false)}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
 
-      
-      <Button 
+
+      <Button
         mode='outlined'
-        onPress={()=>setAddGroupDiagVisible(true)}
-        >Add Marker Group</Button>
+        onPress={() => setAddGroupDiagVisible(true)}
+      >Add Marker Group</Button>
 
       {/* Display all markers groups*/}
       <FlatList
         data={map.markerGroups}
         extraData={map}
-        keyExtractor={(v, i)=>i.toString()}
+        keyExtractor={(v, i) => i.toString()}
         renderItem={renderMarkerGroup}
       ></FlatList>
 
@@ -217,7 +224,7 @@ export default function MapConfigMarker({ map, setMap }) {
         icon={editingIcon}
         setIcon={setEditingIcon}
         onConfirm={onIconEditConfirmed}
-        onCancel={onIconEditCancelled}/>
+        onCancel={onIconEditCancelled} />
 
       {/* Button To add new icon */}
       <Button mode='outlined' onPress={onAddCustIconButtonClicked}>Add Custom Icon</Button>
@@ -226,7 +233,7 @@ export default function MapConfigMarker({ map, setMap }) {
       <FlatList
         data={map.customIcons}
         extraData={map}
-        keyExtractor={i=>i._id}
+        keyExtractor={i => i._id}
         renderItem={renderIconCard}
       ></FlatList>
     </View>
@@ -240,8 +247,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  iconImage:{
-    width:30,
-    height:30,
+  iconImage: {
+    width: 30,
+    height: 30,
   }
 });
