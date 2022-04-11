@@ -1,10 +1,15 @@
+/**
+ * Author: Songhao Li
+ * Implements a home screen. 
+ */
 import React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { Text } from 'react-native-paper';
 import MapCard from '../map-card/map-card';
 import { getMaps } from '../../data/map';
 
-
+/**
+ * Home screen contains a list of public maps.
+ */
 export default function HomeScreen() {
   const [maps, setMaps] = React.useState([]);
 
@@ -15,6 +20,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Render all public maps */}
       <FlatList 
         data={maps}
         keyExtractor={(m)=>m._id}
