@@ -6,7 +6,6 @@ import {
   StyleSheet,
   View,
   PanResponder,
-  Animated,
   Image,
 } from 'react-native';
 import { Button, Switch, Text } from 'react-native-paper';
@@ -15,24 +14,25 @@ import { Button, Switch, Text } from 'react-native-paper';
 // used to generate new id
 // These ids only need to be unique within the same map. 
 // It is very unlikely to have a collision.
-import uuid from 'react-native-uuid';
-
-import GetBuiltInIcons from '../../data/built-in-icons';
 import MapViewMarker from './map-view-marker';
 import MarkerDetail from '../marker-detail/marker-detail';
 import Marker from '../../classes/marker';
-import Icon from '../../classes/icon';
 
-
-const customIcon = Icon.create('smile', '😀');
-
+/**
+ * Implements a pannable map view. 
+ * Props:
+ * <1> map: the map data
+ * <2> setMap: setter to map
+ * <3> canEdit: boolean that determine whether the map can be editted.
+ */
 export default function EgmMapView({ map, setMap, canEdit }) {
-  // get screen dimension
+  // store screen dimension
   const [containerSize, setContainerSize] = React.useState({ x: 100, y: 100 });
 
   // controls the position of the top left corner of the map 
   // from the top left corner of the parent
   const [mapPos, setMapPos] = React.useState({ x: 0, y: 0 });
+
   // controls the zoom level of the map
   const [mapZoom, setMapZoom] = React.useState(1);
 
@@ -45,8 +45,6 @@ export default function EgmMapView({ map, setMap, canEdit }) {
   // some functions are only avialble in edit mode
   const [isEdit, setIsEdit] = React.useState(false);
 
-  // left for potential dynamic swapping
-  const iconSize = { x: 50, y: 50 }
   // control map panning
   const mapPan = PanResponder.create({
     onMoveShouldSetPanResponder: (evt, gestureState) => true,
@@ -198,18 +196,18 @@ export default function EgmMapView({ map, setMap, canEdit }) {
 
   React.useEffect(() => {
     mergeEditingMarker();
-  }
-    , [editingMarker])
+  }, [editingMarker])
+
 
   return (
     <View style={styles.container}
       onLayout={(e) => {
-        // save component size
+        // keep track of the width and height of the container.
         var { x, y, width, height } = e.nativeEvent.layout;
         setContainerSize({ x: width, y: height });
       }}>
-      {/* Map Container */}
 
+      {/* render the map image */}
       <Image
         {...mapPan.panHandlers}
         source={{ uri: `data:image/gif;base64,${map.image}` }}
@@ -218,6 +216,8 @@ export default function EgmMapView({ map, setMap, canEdit }) {
           { left: mapPos.x, top: mapPos.y },
           styles.mapImage]}
       />
+
+      {/* render dialog box showing detail of markers */}
       <MarkerDetail
         visible={markerDetailVisible}
         setVisible={setMarkerDetailVisible}
@@ -228,6 +228,8 @@ export default function EgmMapView({ map, setMap, canEdit }) {
         isEdit={isEdit}
         map={map}
       />
+
+      {/* render all markers */}
       {map.markers.map(m => (<MapViewMarker
         key={m._id}
         marker={m}
