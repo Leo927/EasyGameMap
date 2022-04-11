@@ -4,7 +4,6 @@
 
 import React from "react";
 import { View, StyleSheet, Animated, Text, Image, TouchableOpacity, PanResponder } from "react-native";
-import Marker from '../../classes/marker';
 import GetBuiltInIcons from "../../data/built-in-icons";
 
 /**
