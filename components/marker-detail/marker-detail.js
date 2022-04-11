@@ -5,7 +5,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Dialog, Text, Button, TextInput, Portal, Switch } from 'react-native-paper';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import GetBuiltInIcons from '../../data/built-in-icons';
 
 /**
@@ -37,14 +37,21 @@ export default function MarkerDetail({ visible,
           visible={visible}
           onDismiss={onDismiss}
         >
+
+          {/* Show title of the marker */}
           <Dialog.Title>
             {marker.title}
           </Dialog.Title>
+
           <Dialog.Content>
+            {/* Show description in fure text when not editing */}
             <Text> {!isEdit && marker.description}</Text>
+
+            {/* Row of title and label */}
             {isEdit &&
               <View
                 style={styles.row}>
+                {/* Input for title */}
                 <TextInput
                   style={{ flex: 1 }}
                   label="Title"
@@ -52,15 +59,18 @@ export default function MarkerDetail({ visible,
                   value={marker.title}
                   onChangeText={(t) => setMarker({ ...marker, title: t })}
                 />
+
+                {/* Input for Label */}
                 <TextInput
                   label="Label"
-                  placeholder='Enter Icon.'                  
+                  placeholder='Enter Icon.'
                   style={{ flex: 1 }}
                   value={marker.label}
                   onChangeText={(t) => setMarker({ ...marker, label: t })}
                 />
               </View>}
 
+            {/* Input for description */}
             {isEdit &&
               <TextInput
                 label="Description"
@@ -68,6 +78,8 @@ export default function MarkerDetail({ visible,
                 value={marker.description}
                 onChangeText={(t) => setMarker({ ...marker, description: t })}
               />}
+
+            {/* Input for the coordinate */}
             {isEdit &&
               <View style={styles.row}>
                 <TextInput
@@ -84,6 +96,7 @@ export default function MarkerDetail({ visible,
                 />
               </View>}
 
+            {/* Choose to use custom icon or not */}
             {isEdit &&
               <View style={styles.row}>
                 <Text>Use Custom Icon</Text>
@@ -95,6 +108,7 @@ export default function MarkerDetail({ visible,
               </View>
             }
 
+            {/* Select a custom icon */}
             {isEdit && marker.isCustomIcon &&
               <View style={styles.row}>
                 <Text>Select A Custom Icon</Text>
@@ -110,6 +124,7 @@ export default function MarkerDetail({ visible,
               </View>
             }
 
+            {/* Select a built-in icon. Only show when not using custom icon */}
             {isEdit && !marker.isCustomIcon &&
               <View style={styles.row}>
                 <Text>Select A Default Icon</Text>
@@ -126,8 +141,11 @@ export default function MarkerDetail({ visible,
             }
 
           </Dialog.Content>
+
           <Dialog.Actions>
             <Button onPress={onDismiss}>Confirm</Button>
+
+            {/* Delete should only be displayed when editing */}
             {isEdit &&
               <Button onPress={() => onDelete(marker)}>Delete</Button>}
           </Dialog.Actions>
