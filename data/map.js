@@ -3,6 +3,12 @@ import { SERVER_URL } from "../secrets"
 
 const endPoint = SERVER_URL + '/maps'
 
+/**
+ * Request to create map
+ * @param mapData 
+ * @param user current user
+ * @returns the response body
+ */
 export async function createMap(mapData, user) {
   try {
     const response = await fetch(endPoint, {
@@ -23,6 +29,13 @@ export async function createMap(mapData, user) {
   }
 }
 
+/**
+ * Update an existing map
+ * @param mapId 
+ * @param mapData 
+ * @param user 
+ * @returns response body promise
+ */
 export async function updateMap(mapId, mapData, user) {
   try {
     const response = await fetch(endPoint, {
@@ -72,42 +85,38 @@ export async function getUserMaps(uid) {
   }
 }
 
-// Returns a map by id. if nothing was found, returns null.
+// Get a map by id. if nothing was found, returns null.
 export async function getMap(mapId) {
-  try {
-    const response = await fetch(endPoint + `/${mapId}`);
-    const responseJson = await response.json();
-    if (responseJson.length <= 0)
-      return null;
-    return responseJson[0];
-  }
-  catch (e) {
-    console.error(`Failed to fetch map. Id ${mapId}`);
-    return null;
-  }
+  const response = await fetch(endPoint + `/${mapId}`);
+  if (!response.ok)
+    throw Error("Failed to fetch map. " + response.statusText);
+  const responseJson = await response.json();
+  if (responseJson.length <= 0)
+    throw Error("Failed to fetch map. no map matching id");
+  return responseJson[0];
 }
 
+/**
+ * Request to delte a map
+ * @param mapId: the _id field of the map
+ * @param user: the user requesting to delete the map
+ * @returns A promise to the response body.
+ */
 export async function deleteMap(mapId, user) {
-  try {
-    const response = await fetch(endPoint, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        token: user.token,
-        mapId: mapId,
-      })
-    });
-    if(!response.ok)
-      throw "Bad response. " + response.status ;
-    return response.json();
-  }
-  catch (e) {
-    console.error("Failed to delete map. " + e);
-    return {deletedCount: 0};
-  }
+  const response = await fetch(endPoint, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      token: user.token,
+      mapId: mapId,
+    })
+  });
+  if(!response.ok)
+    throw Error("Failed to delete map. " + response.status);
+  return response.json();
 }
 
 /**
@@ -119,14 +128,14 @@ export async function deleteMap(mapId, user) {
 export async function getMaps() {
   try {
     const response = await fetch(endPoint);
+    if(!response.ok)
+      throw Error("Failed to get all public maps. " + response.statusText);
     const responseJson = await response.json();
-    if (responseJson.length <= 0)
-      return null;
     return responseJson;
   }
   catch (e) {
-    console.error(`Failed to fetch all public map listings. `);
-    return null;
+    console.error(`Failed to fetch all public map listings. `+e);
+    return [];
   }
 }
 
