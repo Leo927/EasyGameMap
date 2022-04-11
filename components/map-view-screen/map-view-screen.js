@@ -4,6 +4,11 @@ import { View, StyleSheet } from 'react-native';
 import EgmMapView from "../map-view/map-view";
 import { getMap } from '../../data/map';
 
+/**
+ * It is a wrapper to EgmMapView that disable all editing.
+ * Props: 
+ * <1> route.mapId: should match a map._id.
+ */
 export default function MapViewScreen({route}){
   const [mapData, setMapData] = React.useState(undefined);
 
@@ -19,6 +24,7 @@ export default function MapViewScreen({route}){
 
   return(
     <View style={styles.container}>
+      {/* Render the map in non editable form*/}
       {mapData!=undefined&&
         <EgmMapView map={mapData} canEdit={false}/>
       }
