@@ -78,12 +78,20 @@ Currently the only supported login method is Github Authentication.
 ## Logout
 To log out of ones account, press the purple circle on the top right and select LOGOUT. Note this button is only avaialble when the user is already logged in.
 
+<img src="readme/resources/logged in user menu.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
 ## Map Managment
 To manage all maps owned by the user, the user must be logged in. 
 
 Once logged in, there are two tabs at the bottom of the screen: Home and Profile. Press profile to see all the maps owned by the currently logged in user.
 
 After a short loading, all the maps owned by the current user should be listed in the center of the screen. 
+
+<img src="readme/resources/profile.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
 
 ### Creating A Map
 To create a map. The user must first login to their account. 
@@ -94,22 +102,79 @@ The user must first give the map a name. And then press the SAVE button to creat
 
 If creating was successful, a small print will show up underneath the SAVE button.
 
-
+<img src="readme/resources/updated.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
 
 ### Changing Name
 Thje name of a map can be changed in the general tab of the map. Once the name is changed, press SAVE button in the general tab. 
 
 ### Manage Custom Icons
+
+<img src="readme/resources/custom icon.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
 #### Create A Custom Icon
 Custom icons can be managed in MapConfigMarker component. To add a custom icon, go to general tab of the map management. 
 And then Click ```ADD CUSTOM ICON```. An dialog will show up prompting user to enter the name and select an image for the icon.
 Once the name and the image are selected. Press ```CONFIRM``` on the bottom right of the dialog to confirm.
+
 #### Editing A Custom Icon
 Once a custom icon is created. The user can see the icon in general tab. Pressing the ```EDIT``` Button on an icon card will 
 display the edit dialog for the icon. 
+
+<img src="readme/resources/custom icon detail.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
 #### Deleting A Custom Icon
 To delete a custom icon, press the DELETE button on the icon card. Note that all markers on the map currently using this icon will switch to using built-in default icon.
 
+### Manage Map Image
+Map image can be selected in the Underlay tab of map config. 
+
+<img src="readme/resources/pick map image.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
+Once an image is selected, the image will be displayed. The size of the image can also be defined. This is used to stretch some maps to their in-game sizes. 
+
+<img src="readme/resources/map image.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
+### Manage Markers
+Markers can be managed in the Map tab of the config page. 
+
+<img src="readme/resources/map non edit mode.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
+To enable editing, toggle EditMode on the top right corner. 
+
+#### Create Markers
+In edit mode, the user can press the New Marker Button to create a new marker. The new marker is placed at the center of the screen by default. 
+
+<img src="readme/resources/map edit mode.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
+Then a marker detail dialog will show up for configuring the newly created marker. 
+
+<img src="readme/resources/marker detail.jpg"
+     alt="Markdown Monster icon"
+     style="height: 500px;" />
+
+Once the fields are filled, user can press confirm or tab outside of the dialog to dismiss the dialog. 
+
+#### Edit Markers
+To edit a marker, the user must be in edit mode. First press the marker. The same dialog will show up. User can then edit the marker and press Confirm to exit the dialog. 
+
+#### Delete Markers
+To delete a marker, the user must be in edit mode. Press the target marker to open the marker detail dialog. Then press the DELETE button on the bottom right of the dialog. 
+
+### Caveats
+To save the changes made to a map, the user must pressed the SAVE button in the general tab. Otherwise no changes will be saved to the server. 
 
 ## Data Classes
 ### Map
