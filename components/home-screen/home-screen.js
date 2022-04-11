@@ -1,7 +1,3 @@
-/**
- * Author: Songhao Li
- * Implements a home screen. 
- */
 import React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import MapCard from '../map-card/map-card';
